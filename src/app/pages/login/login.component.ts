@@ -7,9 +7,9 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AppRoutesConfig } from '../../../config/routes.config';
+import { AppRoutesConfig } from '../../config/routes.config';
 import { Router } from '@angular/router';
 
 @Component({
@@ -38,18 +38,18 @@ export class LoginComponent {
   ) {}
 
   public loginForm = new FormGroup({
-    username: new FormControl('', Validators.required),
+    email: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
   });
 
   public onSubmit(): void {
     if (
-      this.loginForm.controls.username.value !== null &&
+      this.loginForm.controls.email.value !== null &&
       this.loginForm.controls.password.value !== null
     ) {
       this.authService
         .login(
-          this.loginForm.controls.username.value,
+          this.loginForm.controls.email.value,
           this.loginForm.controls.password.value
         )
         .subscribe((value) => {
