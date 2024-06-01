@@ -12,6 +12,7 @@ import {
   emailRegex,
   nameRegex,
 } from '../../common/regex_constants';
+import { AuthService } from '../../services/auth.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AppRoutesConfig } from '../../config/routes.config';
 import { Router } from '@angular/router';
@@ -37,17 +38,14 @@ export class RegisterComponent {
   public show: boolean = true;
   public showRepeat: boolean = true;
 
-  public constructor(private router: Router) {}
+  public registerMessage: string = '';
+
+  public constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   public registerForm = new FormGroup({
-    firstName: new FormControl('', [
-      Validators.required,
-      Validators.pattern(nameRegex),
-    ]),
-    lastName: new FormControl('', [
-      Validators.required,
-      Validators.pattern(nameRegex),
-    ]),
     username: new FormControl('', [
       Validators.required,
       Validators.minLength(4),
@@ -71,6 +69,24 @@ export class RegisterComponent {
   });
 
   public onSubmit(): void {
-    this.router.navigate([]);
+    if (
+      this.registerForm.controls.username.value !== null &&
+      this.registerForm.controls.email.value !== null &&
+      this.registerForm.controls.password.value !== null
+    ) {
+      this.authService
+        .register(
+          this.registerForm.controls.username.value,
+          this.registerForm.controls.email.value,
+          this.registerForm.controls.password.value,
+        )
+        .subscribe((value) => {
+          if (value) {
+            this.router.navigate([AppRoutesConfig.routes.homepage]);
+          } else {
+            this.registerMessage = 'Login Failed';
+          }
+        });
+    }
   }
 }

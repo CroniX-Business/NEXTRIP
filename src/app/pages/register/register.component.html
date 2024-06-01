@@ -1,1 +1,301 @@
-<p>register works!</p>,
+<section class="bg-gradient-to-t from-cyan-500 from-2% via-cyan-700 via-25% to-cyan-800 to-80%">
+  <div
+    class="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0"
+  >
+    <a
+      href="#"
+      class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+    >
+      <img
+        class="w-[300px] h-20 mr-2"
+        src="assets/NEXTRIP_logo.png"
+        alt="logo"
+      />
+    </a>
+
+    <div
+      class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+    >
+      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <h1
+          class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+        >
+          Register your account
+        </h1>
+
+        <form
+          [formGroup]="registerForm"
+          (ngSubmit)="onSubmit()"
+          class="space-y-4 md:space-y-6"
+        >
+          <div>
+            <label
+              for="username"
+              class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Username</label
+            >
+            <input
+              type="text"
+              formControlName="username"
+              id="username"
+              class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+              placeholder="name"
+              required
+            />
+            <div
+              *ngIf="
+                registerForm.controls['username'].invalid &&
+                registerForm.controls['username'].touched
+              "
+            >
+              <span
+                class="error text-red-500"
+                *ngIf="registerForm.controls['username'].errors?.['required']"
+              >
+                Username is required.
+              </span>
+            </div>
+            <div *ngIf="registerForm.controls['username'].invalid">
+              <span
+                class="error text-red-500"
+                *ngIf="registerForm.controls['username'].hasError('minlength')"
+              >
+                Lenght must be greater than 3
+              </span>
+              <span
+                class="error text-red-500"
+                *ngIf="registerForm.controls['username'].hasError('pattern')"
+              >
+                Username must have only letters, numbers, underscore, or dot.
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="email"
+              class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Email</label
+            >
+            <input
+              type="email"
+              formControlName="email"
+              id="email"
+              class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+              placeholder="name@company.com"
+              required=""
+            />
+            <div
+              *ngIf="
+                registerForm.controls['email'].invalid &&
+                registerForm.controls['email'].touched
+              "
+            >
+              <span
+                class="error text-red-500"
+                *ngIf="registerForm.controls['email'].errors?.['required']"
+              >
+                Email is required.
+              </span>
+            </div>
+            <div *ngIf="registerForm.controls['email'].invalid">
+              <span
+                class="error text-red-500"
+                *ngIf="registerForm.controls['email'].hasError('pattern')"
+              >
+                Email doesn't match default email pattern
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="password"
+              class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Password</label
+            >
+            <div class="flex">
+              <input
+                type="password"
+                id="password"
+                formControlName="password"
+                placeholder="••••••••"
+                class="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                [type]="show ? 'password' : 'text'"
+                aria-label="Password"
+                aria-describedby="toggle-password"
+                required
+              />
+              <span
+                class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
+              >
+                <button
+                  class="w-5 flex justify-center items-center"
+                  type="button"
+                  id="toggle-password"
+                  (click)="show = !show"
+                >
+                  <i
+                    class="text-center"
+                    [ngClass]="
+                      show ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'
+                    "
+                  ></i>
+                </button>
+              </span>
+            </div>
+            <div
+              *ngIf="
+                registerForm.controls['password'].invalid &&
+                registerForm.controls['password'].touched
+              "
+            >
+              <span
+                class="error text-red-500"
+                *ngIf="registerForm.controls['password'].errors?.['required']"
+              >
+                Password is required.
+              </span>
+            </div>
+            <div *ngIf="registerForm.controls['password'].invalid">
+              <span
+                class="error text-red-500"
+                *ngIf="registerForm.controls['password'].hasError('minlength')"
+              >
+                Lenght must be greater than 8
+                <br />
+              </span>
+              <span
+                class="error text-red-500"
+                *ngIf="registerForm.controls['password'].hasError('pattern')"
+              >
+                Password must contain at least one number, uppercase, lowercase,
+                have at least 8 characters and cannot contain whitespace
+              </span>
+            </div>
+          </div>
+
+          <div>
+            <label
+              for="repeatPassword"
+              class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Repeat Password</label
+            >
+            <div class="flex">
+              <input
+                type="password"
+                id="repeatPassword"
+                formControlName="repeatPassword"
+                placeholder="••••••••"
+                class="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                [type]="showRepeat ? 'password' : 'text'"
+                aria-label="Repeat Password"
+                aria-describedby="toggle-repeatPassword"
+                required
+              />
+              <span
+                class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-e-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
+              >
+                <button
+                  class="w-5 flex justify-center items-center"
+                  type="button"
+                  id="toggle-repeatPassword"
+                  (click)="showRepeat = !showRepeat"
+                >
+                  <i
+                    class="text-center"
+                    [ngClass]="
+                      showRepeat ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'
+                    "
+                  ></i>
+                </button>
+              </span>
+            </div>
+            <div
+              *ngIf="
+                registerForm.controls['repeatPassword'].invalid &&
+                registerForm.controls['repeatPassword'].touched
+              "
+            >
+              <span
+                class="error text-red-500"
+                *ngIf="registerForm.controls['repeatPassword'].errors?.['required']"
+              >
+                Password is required.
+              </span>
+            </div>
+            <div *ngIf="registerForm.controls['repeatPassword'].invalid">
+              <span
+                class="error text-red-500"
+                *ngIf="
+                  registerForm.controls['repeatPassword'].hasError('minlength')
+                "
+              >
+                Lenght must be greater than 8
+                <br />
+              </span>
+              <span
+                class="error text-red-500"
+                *ngIf="
+                  registerForm.controls['repeatPassword'].hasError('pattern')
+                "
+              >
+                Password must contain at least one number, uppercase, lowercase,
+                have at least 8 characters and cannot contain whitespace
+              </span>
+            </div>
+            <div
+              *ngIf="
+                registerForm.controls['repeatPassword'].valid &&
+                registerForm.controls['password'].valid
+              "
+            >
+              <span
+                *ngIf="
+                  registerForm.controls['repeatPassword'].value ===
+                  registerForm.controls['password'].value
+                "
+                class="error text-cyan-400"
+              >
+                Passwords match
+              </span>
+              <span
+                *ngIf="
+                  registerForm.controls['repeatPassword'].value !==
+                  registerForm.controls['password'].value
+                "
+                class="error text-red-500"
+              >
+                Passwords do not match
+              </span>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-center pt-5">
+            <button
+              type="submit"
+              class="h-10 w-52 border rounded-md dark:border-gray-600"
+              [ngClass]="
+                registerForm.invalid ||
+                registerForm.controls['repeatPassword'].value !==
+                  registerForm.controls['password'].value
+                  ? 'bg-gray-700 text-white'
+                  : 'bg-cyan-400 text-black'
+              "
+              [disabled]="
+                registerForm.invalid ||
+                registerForm.controls['repeatPassword'].value !==
+                  registerForm.controls['password'].value
+              "
+            >
+              Register
+            </button>
+            <div class="text-center mt-3" *ngIf="registerMessage !== null">
+              {{ registerMessage }}
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

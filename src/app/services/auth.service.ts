@@ -27,6 +27,15 @@ export class AuthService {
     return of(false);
   }
 
+  public register(username: string, email: string, password: string): Observable<boolean> {
+    console.log('register', username, password, email);
+    if (Math.random() >= 0.5) {
+      return of(true);
+    }
+    return of(false);
+  }
+
+
   private validateToken(token: string): JwtPayload | null {
     try {
       const payload = this.decodeToken(token);
