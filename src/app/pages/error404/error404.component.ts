@@ -19,6 +19,6 @@ export class Error404Component {
     private router: Router
   ) {}
   onSubmit(): void {
-    this.router.navigate([AppRoutesConfig.routes.homepage]);
+    this.router.navigate([AppRoutesConfig.routes.home]);
   }
 }
