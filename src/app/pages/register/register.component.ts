@@ -82,7 +82,7 @@ export class RegisterComponent {
         )
         .subscribe((value) => {
           if (value) {
-            this.router.navigate([AppRoutesConfig.routes.homepage]);
+            this.router.navigate([AppRoutesConfig.routes.notFound]);
           } else {
             this.registerMessage = 'Login Failed';
           }

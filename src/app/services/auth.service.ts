@@ -1,40 +1,59 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { jwtDecode } from 'jwt-decode'
+import { Observable, catchError, map, of } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
 import moment from 'moment';
 import { JwtPayload } from '../models/JwtPayload';
 import { AppRoutesConfig } from '../config/routes.config';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { LocalstorageService } from '../LocalstorageService';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
+  private apiUrl = environment.apiUrl;
 
-  constructor(private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private localStorage: LocalstorageService) {}
 
-  private token = environment.jwtToken;
-
-  public login(username: string, password: string): Observable<boolean> {
-    console.log('login', username, password);
-    if (Math.random() >= 0.5) {
-      const tokenPayload = this.validateToken(this.token);
-      if (tokenPayload) {
-        return of(true);
-      }
-    }
-    return of(false);
+  public login(email: string, password: string): Observable<boolean> {
+    return this.http
+      .post<{ token: string }>(`${this.apiUrl}/login`, { email, password })
+      .pipe(
+        map((response) => {
+          const tokenPayload = this.validateToken(response.token);
+          return !!tokenPayload;
+        }),
+        catchError((error) => {
+          console.error('Login error:', error);
+          return of(false);
+        })
+      );
   }
 
-  public register(username: string, email: string, password: string): Observable<boolean> {
-    console.log('register', username, password, email);
-    if (Math.random() >= 0.5) {
-      return of(true);
-    }
-    return of(false);
+  public register(
+    username: string,
+    email: string,
+    password: string
+  ): Observable<boolean> {
+    return this.http
+      .post<{ token: string }>(`${this.apiUrl}/register`, {
+        username,
+        email,
+        password,
+      })
+      .pipe(
+        map((response) => {
+          const tokenPayload = this.validateToken(response.token);
+          return !!tokenPayload;
+        }),
+        catchError((error) => {
+          console.error('Registration error:', error);
+          return of(false);
+        })
+      );
   }
-
 
   private validateToken(token: string): JwtPayload | null {
     try {
@@ -69,18 +88,18 @@ export class AuthService {
     const tokenExpirationUnixTime = this.getTokenExpiration();
 
     const currentMoment = moment.unix(currentUnixTime);
-    const tokenExpirationMoment = moment.unix(tokenExpirationUnixTime);
+    const tokenExpirationMoment = moment.unix(tokenExpirationUnixTime!!);
 
     return tokenExpirationMoment.isBefore(currentMoment);
   }
 
   private getTokenExpiration(): number {
-    return +(localStorage.getItem('expires_at') || '0');
+    return +(this.localStorage.getItem('expires_at') || '0');
   }
 
   private setSession(payload: JwtPayload): void {
     const expires_at = +moment().unix() + +payload.expires_at;
-    localStorage.setItem('expires_at', String(expires_at));
+    this.localStorage.setItem('expires_at', String(expires_at));
   }
 
   public logOut(): void {
@@ -89,11 +108,10 @@ export class AuthService {
   }
 
   private removeSession(): void {
-    localStorage.removeItem('expires_at');
+    this.localStorage.removeItem('expires_at');
   }
 
   public isLoggedIn(): boolean {
     return !this.hasTokenExpired();
   }
-
 }
