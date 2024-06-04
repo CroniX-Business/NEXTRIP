@@ -5,6 +5,8 @@ import { RegisterComponent } from './pages/register/register.component';
 import { Error404Component } from './pages/error404/error404.component';
 import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './pages/home/home.component';
+import { AboutComponent } from './pages/about/about.component';
+import { GeneratorComponent } from './pages/generator/generator.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: AppRoutesConfig.routes.home, pathMatch: 'full' },
@@ -12,6 +14,16 @@ export const routes: Routes = [
     path: AppRoutesConfig.routeNames.home,
     component: HomeComponent,
     title: 'Home',
+  },
+  {
+    path: AppRoutesConfig.routeNames.about,
+    component: AboutComponent,
+    title: 'About',
+  },
+  {
+    path: AppRoutesConfig.routeNames.generator,
+    component: GeneratorComponent,
+    title: 'Generator',
     //canActivate: [AuthGuard],
   },
   {

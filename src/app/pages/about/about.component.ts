@@ -4,10 +4,10 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TopAppBarComponent } from "../topAppBar/topAppBar.component";
 
 @Component({
-    selector: 'app-home',
+    selector: 'app-about',
     standalone: true,
-    templateUrl: './home.component.html',
-    styleUrl: './home.component.css',
+    templateUrl: './about.component.html',
+    styleUrl: './about.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
@@ -17,5 +17,5 @@ import { TopAppBarComponent } from "../topAppBar/topAppBar.component";
         TopAppBarComponent
     ]
 })
-export class HomeComponent{
+export class AboutComponent {
 }

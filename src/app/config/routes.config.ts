@@ -1,14 +1,18 @@
 export const AppRoutesConfig = {
     routeNames: {
+      home: '',
+      about: 'about',
+      generator: 'generator',
       login: 'login',
       register: 'register',
-      home: 'home',
       notFound: '**',
     },
     routes: {
+      home: '',
+      about: '/about',
+      generator: '/generator',
       login: '/login',
       register: '/register',
-      home: '/home',
       notFound: '/404',
     },
   };
