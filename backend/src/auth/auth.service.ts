@@ -7,7 +7,7 @@ import { environment } from 'environments/environment';
 
 @Injectable()
 export class AuthService {
-  private readonly jwtSecret = environment.jwtToken;
+  private readonly jwtSecret = environment.JWT_TOKEN;
 
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 

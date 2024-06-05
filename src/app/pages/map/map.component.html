@@ -1,0 +1,71 @@
+<div
+  class="map-container relative p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700"
+>
+  <button
+    (click)="openModal()"
+    class="absolute top-5 left-5 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md focus:outline-none z-40"
+  >
+    Opcije generatora
+  </button>
+
+  <div *ngIf="showModal" class="absolute top-20 left-5 flex z-40">
+    <div class="modal-container bg-white p-6 rounded-lg">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold">Generator</h2>
+        <button
+          (click)="closeModal()"
+          class="text-gray-600 hover:text-gray-800 focus:outline-none"
+        >
+          <svg
+            class="w-6 h-6"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+      <form [formGroup]="generatorForm" (ngSubmit)="convertCities()">
+        <div class="mb-4">
+          <label for="startCity" class="block text-gray-700">Start City:</label>
+          <input
+            type="text"
+            id="startCity"
+            formControlName="startCity"
+            name="startCity"
+            class="mt-1 p-2 border rounded w-full"
+            required
+          />
+        </div>
+        <div class="mb-4">
+          <label for="endCity" class="block text-gray-700">End City:</label>
+          <input
+            type="text"
+            id="endCity"
+            formControlName="endCity"
+            name="endCity"
+            class="mt-1 p-2 border rounded w-full"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Započni
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="h-full">
+    <div #map class="h-full"></div>
+  </div>
+</div>

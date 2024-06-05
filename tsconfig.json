@@ -25,6 +25,10 @@
       "dom"
     ]
   },
+  "include": [
+    "typings",
+    "./src/app/declarations/maplibre-gl-geocoder.d.ts"
+  ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

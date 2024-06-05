@@ -24,7 +24,7 @@ export const routes: Routes = [
     path: AppRoutesConfig.routeNames.generator,
     component: GeneratorComponent,
     title: 'Generator',
-    //canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: AppRoutesConfig.routeNames.login,

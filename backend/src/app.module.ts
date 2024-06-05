@@ -7,7 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { environment } from 'environments/environment';
 
 @Module({
-  imports: [MongooseModule.forRoot(environment.MongoURI), AuthModule],
+  imports: [MongooseModule.forRoot(environment.MONGO_URI), AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

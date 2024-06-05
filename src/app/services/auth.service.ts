@@ -13,13 +13,13 @@ import { LocalstorageService } from '../LocalstorageService';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = environment.apiUrl;
+  private BACKEND_API = environment.BACKEND_API;
 
   constructor(private http: HttpClient, private router: Router, private localStorage: LocalstorageService) {}
 
   public login(email: string, password: string): Observable<boolean> {
     return this.http
-      .post<{ token: string }>(`${this.apiUrl}/login`, { email, password })
+      .post<{ token: string }>(`${this.BACKEND_API}/login`, { email, password })
       .pipe(
         map((response) => {
           const tokenPayload = this.validateToken(response.token);
@@ -38,7 +38,7 @@ export class AuthService {
     password: string
   ): Observable<boolean> {
     return this.http
-      .post<{ token: string }>(`${this.apiUrl}/register`, {
+      .post<{ token: string }>(`${this.BACKEND_API}/register`, {
         username,
         email,
         password,

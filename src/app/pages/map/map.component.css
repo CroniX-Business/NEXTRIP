@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+
+body {
+  background-color: black;
+}
+
+.map-container {
+  height: 950px;
+}
