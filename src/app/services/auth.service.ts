@@ -19,7 +19,7 @@ export class AuthService {
 
   public login(email: string, password: string): Observable<boolean> {
     return this.http
-      .post<{ token: string }>(`${this.BACKEND_API}/login`, { email, password })
+      .post<{ token: string }>(`${this.BACKEND_API}/auth/login`, { email, password })
       .pipe(
         map((response) => {
           const tokenPayload = this.validateToken(response.token);
@@ -38,7 +38,7 @@ export class AuthService {
     password: string
   ): Observable<boolean> {
     return this.http
-      .post<{ token: string }>(`${this.BACKEND_API}/register`, {
+      .post<{ token: string }>(`${this.BACKEND_API}/auth/register`, {
         username,
         email,
         password,

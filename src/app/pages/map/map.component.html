@@ -8,29 +8,17 @@
     Opcije generatora
   </button>
 
+  <button
+    (click)="myLocation()"
+    class="absolute bottom-5 right-5 px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md focus:outline-none z-40"
+  >
+    <i class="fa-solid fa-location-crosshairs" style="color: #ffffff"></i>
+  </button>
+
   <div *ngIf="showModal" class="absolute top-20 left-5 flex z-40">
     <div class="modal-container bg-white p-6 rounded-lg">
-      <div class="flex justify-between items-center mb-4">
+      <div class="flex justify-center items-center mb-4">
         <h2 class="text-lg font-bold">Generator</h2>
-        <button
-          (click)="closeModal()"
-          class="text-gray-600 hover:text-gray-800 focus:outline-none"
-        >
-          <svg
-            class="w-6 h-6"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
       </div>
       <form [formGroup]="generatorForm" (ngSubmit)="convertCities()">
         <div class="mb-4">
