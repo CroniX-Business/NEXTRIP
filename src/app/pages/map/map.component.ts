@@ -6,15 +6,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Map } from 'maplibre-gl';
-import MapLibreGlDirections, {
+import { Map, Marker, Popup } from 'maplibre-gl';
+import {
   LoadingIndicatorControl,
   layersFactory,
 } from '@maplibre/maplibre-gl-directions';
-import { HttpClient } from '@angular/common/http';
 import { GeneratorService } from '../../services/generator.service';
 import { environment } from '../../../environments/environment';
-import { EMPTY, catchError, combineLatest } from 'rxjs';
+import CustomMapLibreGlDirections from './custom-directions';
 
 @Component({
   selector: 'app-map',
@@ -24,36 +23,40 @@ import { EMPTY, catchError, combineLatest } from 'rxjs';
   styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements AfterViewInit {
+  MAP_STYLE_API: string = environment.MAP_STYLE_API;
+  MAP_STYLE_JSON: string = environment.MAP_STYLE_JSON;
+
   @ViewChild('map')
   private mapContainer!: ElementRef<HTMLElement>;
 
-  showModal: boolean = false;
-  generatorForm: FormGroup;
-
-  waypoints: [number, number][] = [];
-  initialState: [number, number] | null = null;
-
   map!: Map;
-  directions!: MapLibreGlDirections;
+  directions!: CustomMapLibreGlDirections;
+  initialState: [number, number] = [0, 0];
+  showModal: boolean = false;
 
-  constructor(
-    private generatorService: GeneratorService,
-    private http: HttpClient
-  ) {
+  generatorForm: FormGroup<{
+    startCity: FormControl<string | null>;
+    endCity: FormControl<string | null>;
+  }>;
+
+  constructor(private generatorService: GeneratorService) {
     this.generatorForm = new FormGroup({
       startCity: new FormControl('', Validators.required),
       endCity: new FormControl('', Validators.required),
     });
-    this.setLocation();
-  }
-
-  openModal() {
-    this.showModal = !this.showModal;
   }
 
   myLocation() {
     this.setLocation();
-    this.map.setCenter(this.initialState!);
+    this.setUserMarker();
+    this.map.flyTo({
+      center: this.initialState!,
+      zoom: 11,
+    });
+  }
+
+  openModal() {
+    this.showModal = !this.showModal;
   }
 
   async ngAfterViewInit() {
@@ -65,12 +68,9 @@ export class MapComponent implements AfterViewInit {
       await this.setLocation();
 
       if (this.initialState) {
-        const MAP_STYLE_API = environment.MAP_STYLE_API;
-        const MAP_STYLE_JSON = environment.MAP_STYLE_JSON;
-
         this.map = new Map({
           container: this.mapContainer.nativeElement,
-          style: `${MAP_STYLE_JSON}?apiKey=${MAP_STYLE_API}`,
+          style: `${this.MAP_STYLE_JSON}?apiKey=${this.MAP_STYLE_API}`,
           zoom: 11,
           minZoom: 2,
           center: this.initialState,
@@ -105,10 +105,12 @@ export class MapComponent implements AfterViewInit {
           ],
         });
 
+        this.setUserMarker();
+
         this.map.on('load', () => {
-          this.directions = new MapLibreGlDirections(this.map, {
+          this.directions = new CustomMapLibreGlDirections(this.map, {
             requestOptions: {
-              alternatives: 'true',
+              alternatives: 'false',
             },
             layers,
           });
@@ -128,6 +130,16 @@ export class MapComponent implements AfterViewInit {
     } catch (error) {
       console.error(error);
     }
+  }
+  setUserMarker() {
+    const UserInfo = new Popup({ offset: 25 }).setText('Your location');
+
+    new Marker({
+      color: '#b74de8',
+    })
+      .setLngLat(this.initialState)
+      .setPopup(UserInfo)
+      .addTo(this.map);
   }
 
   getLocation(): Promise<[number, number]> {
@@ -149,36 +161,17 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  async convertCities(): Promise<void> {
-    try {
-      const startCity = this.generatorForm.controls['startCity'].value!;
-      const endCity = this.generatorForm.controls['endCity'].value!;
-
-      combineLatest([
-        this.generatorService.convertCity(startCity),
-        this.generatorService.convertCity(endCity),
-      ])
-        .pipe(
-          catchError((error) => {
-            console.error('Error converting cities:', error);
-            return EMPTY; // Return an empty observable to prevent breaking the stream
-          })
-        )
-        .subscribe({
-          next: ([start, end]) => {
-            this.generatorService.generateRoute(start, end).subscribe({
-              next: (waypoints) => {
-                this.map.setCenter(waypoints[0]);
-                this.directions.setWaypoints(waypoints);
-              },
-              error: (error) => {
-                console.error('Error generating route:', error);
-              },
-            });
-          },
-        });
-    } catch (error) {
-      console.error('Error converting cities:', error);
-    }
+  generateTrip(): void {
+    this.generatorService
+      .generateRoute(this.directions.waypointsFeatures)
+      .subscribe({
+        next: (response) => {
+          console.log('Trip generated successfully', response);
+          this.directions.interactive = false;
+        },
+        error: (error) => {
+          console.error('Error generating trip', error);
+        },
+      });
   }
 }

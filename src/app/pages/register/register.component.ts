@@ -10,7 +10,6 @@ import {
   passwordRegex,
   usernameRegex,
   emailRegex,
-  nameRegex,
 } from '../../common/regex_constants';
 import { AuthService } from '../../services/auth.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
@@ -82,7 +81,7 @@ export class RegisterComponent {
         )
         .subscribe((value) => {
           if (value) {
-            this.router.navigate([AppRoutesConfig.routes.notFound]);
+            this.router.navigate([AppRoutesConfig.routes.generator]);
           } else {
             this.registerMessage = 'Login Failed';
           }

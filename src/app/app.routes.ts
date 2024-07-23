@@ -7,6 +7,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { AboutComponent } from './pages/about/about.component';
 import { GeneratorComponent } from './pages/generator/generator.component';
+import { ContactComponent } from './pages/contact/contact.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: AppRoutesConfig.routes.home, pathMatch: 'full' },
@@ -19,6 +20,11 @@ export const routes: Routes = [
     path: AppRoutesConfig.routeNames.about,
     component: AboutComponent,
     title: 'About',
+  },
+  {
+    path: AppRoutesConfig.routeNames.contact,
+    component: ContactComponent,
+    title: 'Contact',
   },
   {
     path: AppRoutesConfig.routeNames.generator,

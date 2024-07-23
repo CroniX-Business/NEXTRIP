@@ -2,6 +2,7 @@ export const AppRoutesConfig = {
     routeNames: {
       home: '',
       about: 'about',
+      contact: 'contact',
       generator: 'generator',
       login: 'login',
       register: 'register',
@@ -10,6 +11,7 @@ export const AppRoutesConfig = {
     routes: {
       home: '',
       about: '/about',
+      contact: '/contact',
       generator: '/generator',
       login: '/login',
       register: '/register',

@@ -1,0 +1,117 @@
+<section class="bg-cyan-600 dark:bg-cyan-700">
+  <app-top-app-bar route="contact"></app-top-app-bar>
+  <div class="flex flex-col px-6 py-8 mx-auto h-screen lg:py-0">
+    <div class="py-8 lg:py-16 px-4 mx-auto max-w-screen-md">
+      <h2
+        class="mb-4 text-4xl tracking-tight font-extrabold text-center text-gray-900 dark:text-white"
+      >
+        Contact Us
+      </h2>
+      <p
+        class="mb-8 lg:mb-16 font-light text-center text-gray-900 dark:text-gray-400 sm:text-xl"
+      >
+        Got a technical issue? Want to send feedback about a beta feature? Let
+        us know.
+      </p>
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-8">
+        <div>
+          <label
+            for="email"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Your email</label
+          >
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-600 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
+            placeholder="name@gmail.com"
+            required
+          />
+          <div
+            *ngIf="
+              contactForm.controls['email'].invalid &&
+              contactForm.controls['email'].touched
+            "
+          >
+            <span
+              class="error text-red-500"
+              *ngIf="contactForm.controls['email'].errors?.['required']"
+            >
+              Email is required.
+            </span>
+          </div>
+          <div *ngIf="contactForm.controls['email'].invalid">
+            <span
+              class="error text-red-500"
+              *ngIf="contactForm.controls['email'].hasError('pattern')"
+            >
+              Email doesn't match default email pattern
+            </span>
+          </div>
+        </div>
+        <div>
+          <label
+            for="subject"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Subject</label
+          >
+          <input
+            type="text"
+            id="subject"
+            formControlName="subject"
+            class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-600 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
+            placeholder="Let us know how we can help you"
+            required
+          />
+          <div
+            *ngIf="
+              contactForm.controls['subject'].invalid &&
+              contactForm.controls['subject'].touched
+            "
+          >
+            <span
+              class="error text-red-500"
+              *ngIf="contactForm.controls['subject'].errors?.['required']"
+            >
+              Subject is required.
+            </span>
+          </div>
+        </div>
+        <div class="sm:col-span-2">
+          <label
+            for="message"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >Your message</label
+          >
+          <textarea
+            id="message"
+            rows="6"
+            formControlName="message"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg shadow-sm border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-600 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+            placeholder="Leave a comment..."
+          ></textarea>
+          <div
+            *ngIf="
+              contactForm.controls['message'].invalid &&
+              contactForm.controls['message'].touched
+            "
+          >
+            <span
+              class="error text-red-500"
+              *ngIf="contactForm.controls['message'].errors?.['required']"
+            >
+              Message is required.
+            </span>
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="flex items-center justify-center mx-auto text-black dark:hover:text-black bg-white hover:bg-cyan-400 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 w-40 text-center"
+        >
+          Send message
+        </button>
+      </form>
+    </div>
+  </div>
+</section>

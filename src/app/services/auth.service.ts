@@ -88,7 +88,8 @@ export class AuthService {
     const tokenExpirationUnixTime = this.getTokenExpiration();
 
     const currentMoment = moment.unix(currentUnixTime);
-    const tokenExpirationMoment = moment.unix(tokenExpirationUnixTime!!);
+    const defaultUnixTime = 0;
+    const tokenExpirationMoment = moment.unix(tokenExpirationUnixTime ?? defaultUnixTime);
 
     return tokenExpirationMoment.isBefore(currentMoment);
   }

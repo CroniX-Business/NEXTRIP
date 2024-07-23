@@ -21,6 +21,5 @@ export class TopAppBarComponent {
   loginPageRoute: string = AppRoutesConfig.routes.login;
   homePageRoute: string = AppRoutesConfig.routes.home;
   aboutPageRoute: string = AppRoutesConfig.routes.about;
-
-  
+  contactPageRoute: string = AppRoutesConfig.routes.contact;
 }
