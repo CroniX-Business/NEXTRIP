@@ -60,7 +60,11 @@ export class MapComponent implements AfterViewInit {
   }
 
   async ngAfterViewInit() {
-    await this.initializeMap();
+    this.mapContainer.nativeElement.classList.add('loader');
+    setTimeout(async () => {
+      this.mapContainer.nativeElement.classList.remove('loader');
+      await this.initializeMap();
+    }, 3000);
   }
 
   async initializeMap() {

@@ -20,6 +20,6 @@ export class TopAppBarComponent {
   @Input() route: string | undefined;
   loginPageRoute: string = AppRoutesConfig.routes.login;
   homePageRoute: string = AppRoutesConfig.routes.home;
-  aboutPageRoute: string = AppRoutesConfig.routes.about;
+  generatorPageRoute: string = `${AppRoutesConfig.routes.generator}/${AppRoutesConfig.routes.map}`;
   contactPageRoute: string = AppRoutesConfig.routes.contact;
 }

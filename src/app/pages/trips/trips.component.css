@@ -1,0 +1,7 @@
+:host {
+  display: block;
+}
+
+.map-container {
+  height: calc(100vh - 30px);
+}

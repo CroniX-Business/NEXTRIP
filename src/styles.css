@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    background-color: hsl(191, 68%, 95%);
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: hsl(191, 68%, 15%);
+    }
+}

@@ -7,5 +7,10 @@ body {
 }
 
 .map-container {
-  height: 950px;
+  /*height: 950px; */
+  height: calc(100vh - 30px);
+}
+
+.loader {
+  @apply animate-spin rounded-full h-48 w-48 border-t-8 border-b-8 border-blue-500 absolute inset-0 m-auto;
 }

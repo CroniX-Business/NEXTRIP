@@ -54,7 +54,7 @@ export class LoginComponent {
         )
         .subscribe((value) => {
           if (value) {
-            this.router.navigate([AppRoutesConfig.routeNames.generator]);
+            this.router.navigate([`${AppRoutesConfig.routeNames.generator}/${AppRoutesConfig.routeNames.map}`]);
           } else {
             this.loginMessage = 'Login Failed';
           }
