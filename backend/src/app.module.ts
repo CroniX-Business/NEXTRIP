@@ -7,9 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { environment } from 'environments/environment';
 import { GeneratorController } from './generator/generator.controller';
 import { GeneratorService } from './generator/generator.service';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
-  imports: [MongooseModule.forRoot(environment.MONGO_URI), AuthModule],
+  imports: [MongooseModule.forRoot(environment.MONGO_URI), AuthModule, ContactModule],
   controllers: [AppController, GeneratorController],
   providers: [AppService, GeneratorService],
 })
