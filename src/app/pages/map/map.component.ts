@@ -61,10 +61,7 @@ export class MapComponent implements AfterViewInit {
 
   async ngAfterViewInit() {
     this.mapContainer.nativeElement.classList.add('loader');
-    setTimeout(async () => {
-      this.mapContainer.nativeElement.classList.remove('loader');
-      await this.initializeMap();
-    }, 3000);
+    await this.initializeMap();
   }
 
   async initializeMap() {
@@ -121,6 +118,8 @@ export class MapComponent implements AfterViewInit {
 
           this.directions.interactive = true;
           this.map.addControl(new LoadingIndicatorControl(this.directions));
+
+          this.mapContainer.nativeElement.classList.remove('loader');
         });
       }
     } catch (error) {
@@ -178,4 +177,6 @@ export class MapComponent implements AfterViewInit {
         },
       });
   }
+
+  saveTrip(): void {}
 }
