@@ -18,18 +18,27 @@ export class AuthService {
   ): Promise<string> {
     const user = new this.userModel({ username, email, password });
     await user.save();
-    return this.jwtSecret;
+    return this.createToken(user._id as Types.ObjectId);
   }
 
   async login(email: string, password: string): Promise<string | null> {
     const user = await this.userModel.findOne({ email });
     if (user && (await user.comparePassword(password))) {
-      return this.jwtSecret;
+      return this.createToken(user._id as Types.ObjectId);
     }
     return null;
   }
 
   private createToken(userId: Types.ObjectId): string {
     return jwt.sign({ id: userId }, this.jwtSecret, { expiresIn: '1h' });
+  }
+
+  async getUserFromToken(token: string): Promise<User | null> {
+    try {
+      const decoded = jwt.verify(token, this.jwtSecret) as { id: string };
+      return await this.userModel.findById(decoded.id).exec();
+    } catch (error) {
+      return null;
+    }
   }
 }

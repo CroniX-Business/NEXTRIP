@@ -1,3 +1,27 @@
 <div
   class="relative p-4 border-gray-200 rounded-lg dark:border-gray-700 bg-slate-500"
-></div>
+>
+  <div *ngIf="user">
+    <div class="flex items-center p-4">
+      <img
+        class="w-40 h-40 rounded object-cover"
+        src="https://picsum.photos/200"
+        alt="User Image"
+      />
+      <div class="ml-4 mb-28">
+        <h2 class="text-2xl font-bold">{{ user.username }}</h2>
+        <h3 class="text-lg">{{ user.role }}</h3>
+      </div>
+    </div>
+    <hr class="border-gray-200" />
+    <div class="p-4">
+      <div class="mb-5"><strong>Email:</strong> {{ user.email }}</div>
+      <div class="mb-5"><strong>First Name:</strong> {{ user.firstName }}</div>
+      <div class="mb-5"><strong>Last Name:</strong> {{ user.lastName }}</div>
+      <div><strong>Tokens:</strong> 5</div>
+    </div>
+  </div>
+  <div *ngIf="!user">
+    <p>Loading user information...</p>
+  </div>
+</div>

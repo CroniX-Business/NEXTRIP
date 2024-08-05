@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import moment from 'moment';
-import { JwtPayload } from '../models/JwtPayload';
 import { AppRoutesConfig } from '../config/routes.config';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { LocalstorageService } from '../LocalstorageService';
+import { User } from '../models/User';
+import { DecodedJwtPayload } from '../models/JwtPayload';
 
 @Injectable({
   providedIn: 'root',
@@ -15,67 +16,60 @@ import { LocalstorageService } from '../LocalstorageService';
 export class AuthService {
   private BACKEND_API = environment.BACKEND_API;
 
-  constructor(private http: HttpClient, private router: Router, private localStorage: LocalstorageService) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private localStorage: LocalstorageService
+  ) {}
 
   public login(email: string, password: string): Observable<boolean> {
-    return this.http
-      .post<{ token: string }>(`${this.BACKEND_API}/auth/login`, { email, password })
-      .pipe(
-        map((response) => {
-          const tokenPayload = this.validateToken(response.token);
-          return !!tokenPayload;
-        }),
-        catchError((error) => {
-          console.error('Login error:', error);
-          return of(false);
-        })
-      );
-  }
-
-  public register(
-    username: string,
-    email: string,
-    password: string
-  ): Observable<boolean> {
-    return this.http
-      .post<{ token: string }>(`${this.BACKEND_API}/auth/register`, {
-        username,
-        email,
-        password,
+    return this.http.post<{ token: string }>(`${this.BACKEND_API}/auth/login`, { email, password }).pipe(
+      map((response) => {
+        const tokenPayload = this.validateToken(response.token);
+        this.localStorage.setItem('jwt_token', response.token);
+        return !!tokenPayload;
+      }),
+      catchError((error) => {
+        console.error('Login error:', error);
+        return of(false);
       })
-      .pipe(
-        map((response) => {
-          const tokenPayload = this.validateToken(response.token);
-          return !!tokenPayload;
-        }),
-        catchError((error) => {
-          console.error('Registration error:', error);
-          return of(false);
-        })
-      );
+    );
   }
 
-  private validateToken(token: string): JwtPayload | null {
+  public register(username: string, email: string, password: string): Observable<boolean> {
+    return this.http.post<{ token: string }>(`${this.BACKEND_API}/auth/register`, { username, email, password }).pipe(
+      map((response) => {
+        const tokenPayload = this.validateToken(response.token);
+        this.localStorage.setItem('jwt_token', response.token);
+        return !!tokenPayload;
+      }),
+      catchError((error) => {
+        console.error('Registration error:', error);
+        return of(false);
+      })
+    );
+  }
+
+  public getUserInfo(): Observable<User> {
+    const token = this.localStorage.getItem('jwt_token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+
+    return this.http.get<User>(`${this.BACKEND_API}/auth/userInfo`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  }
+
+  private validateToken(token: string): DecodedJwtPayload | null {
     try {
       const payload = this.decodeToken(token);
-
-      if (this.hasTokenExpired()) {
+  
+      if (payload && this.hasTokenExpired(payload)) {
         this.logOut();
         return null;
-      } else {
-        return payload;
       }
-    } catch (e) {
-      console.error('Error decoding token:', e);
-      return null;
-    }
-  }
-
-  private decodeToken(token: string): JwtPayload | null {
-    try {
-      const payload = jwtDecode(token) as JwtPayload;
-      this.setSession(payload);
-
+  
       return payload;
     } catch (e) {
       console.error('Error decoding token:', e);
@@ -83,24 +77,27 @@ export class AuthService {
     }
   }
 
-  private hasTokenExpired(): boolean {
-    const currentUnixTime = moment().unix();
-    const tokenExpirationUnixTime = this.getTokenExpiration();
-
-    const currentMoment = moment.unix(currentUnixTime);
-    const defaultUnixTime = 0;
-    const tokenExpirationMoment = moment.unix(tokenExpirationUnixTime ?? defaultUnixTime);
-
-    return tokenExpirationMoment.isBefore(currentMoment);
+  private decodeToken(token: string): DecodedJwtPayload | null {
+    try {
+      const payload = jwtDecode<DecodedJwtPayload>(token);
+      console.log('Token payload:', payload);
+      this.setSession(payload);
+      return payload;
+    } catch (e) {
+      console.error('Error decoding token:', e);
+      return null;
+    }
   }
 
-  private getTokenExpiration(): number {
-    return +(this.localStorage.getItem('expires_at') || '0');
+  private hasTokenExpired(payload: DecodedJwtPayload): boolean {
+    const expirationTime = payload.exp * 1000; // Convert expiration time from seconds to milliseconds
+    const currentTime = moment().valueOf(); // Current time in milliseconds
+    return currentTime >= expirationTime;
   }
 
-  private setSession(payload: JwtPayload): void {
-    const expires_at = +moment().unix() + +payload.expires_at;
-    this.localStorage.setItem('expires_at', String(expires_at));
+  private setSession(payload: DecodedJwtPayload): void {
+    const expiresAt = payload.exp * 1000; // Convert expiration time from seconds to milliseconds
+    this.localStorage.setItem('expires_at', String(expiresAt));
   }
 
   public logOut(): void {
@@ -110,9 +107,18 @@ export class AuthService {
 
   private removeSession(): void {
     this.localStorage.removeItem('expires_at');
+    this.localStorage.removeItem('jwt_token');
   }
 
   public isLoggedIn(): boolean {
-    return !this.hasTokenExpired();
+    // Retrieve 'expires_at' from local storage
+    const expiresAtString = this.localStorage.getItem('expires_at');
+    
+    // Convert to number, defaulting to 0 if 'expires_at' is null or undefined
+    const expiresAt = expiresAtString ? +expiresAtString : 0;
+    
+    // Compare the current time with the expiration time
+    return moment().valueOf() < expiresAt;
   }
+  
 }

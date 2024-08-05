@@ -81,7 +81,7 @@ export class RegisterComponent {
         )
         .subscribe((value) => {
           if (value) {
-            this.router.navigate([AppRoutesConfig.routes.generator]);
+            this.router.navigate([`${AppRoutesConfig.routeNames.generator}/${AppRoutesConfig.routeNames.map}`]);
           } else {
             this.registerMessage = 'Login Failed';
           }

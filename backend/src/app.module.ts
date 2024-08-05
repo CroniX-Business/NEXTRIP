@@ -10,7 +10,11 @@ import { GeneratorService } from './generator/generator.service';
 import { ContactModule } from './contact/contact.module';
 
 @Module({
-  imports: [MongooseModule.forRoot(environment.MONGO_URI), AuthModule, ContactModule],
+  imports: [
+    MongooseModule.forRoot(environment.MONGO_URI),
+    AuthModule,
+    ContactModule,
+  ],
   controllers: [AppController, GeneratorController],
   providers: [AppService, GeneratorService],
 })

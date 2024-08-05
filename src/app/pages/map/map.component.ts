@@ -46,6 +46,12 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
+  isCollapsed = false;
+
+  toggleCollapse() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+
   myLocation() {
     this.setLocation();
     this.setUserMarker();
@@ -109,6 +115,7 @@ export class MapComponent implements AfterViewInit {
         this.setUserMarker();
 
         this.map.on('load', () => {
+          this.mapContainer.nativeElement.classList.remove('loader');
           this.directions = new CustomMapLibreGlDirections(this.map, {
             requestOptions: {
               alternatives: 'false',
@@ -118,8 +125,6 @@ export class MapComponent implements AfterViewInit {
 
           this.directions.interactive = true;
           this.map.addControl(new LoadingIndicatorControl(this.directions));
-
-          this.mapContainer.nativeElement.classList.remove('loader');
         });
       }
     } catch (error) {

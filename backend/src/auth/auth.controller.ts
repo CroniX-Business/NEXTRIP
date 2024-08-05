@@ -4,8 +4,12 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Get,
+  Headers,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { User } from 'schemas/user.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -36,5 +40,20 @@ export class AuthController {
     } else {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
     }
+  }
+
+  @Get('userInfo')
+  async userInfo(@Headers('authorization') authHeader: string): Promise<User> {
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header is missing');
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const user = await this.authService.getUserFromToken(token);
+    if (!user) {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    return user;
   }
 }
