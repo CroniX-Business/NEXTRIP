@@ -12,6 +12,12 @@
         <h2 class="text-2xl font-bold">{{ user.username }}</h2>
         <h3 class="text-lg">{{ user.role }}</h3>
       </div>
+      <button
+        (click)="toggleForm()"
+        class="absolute top-10 right-6 px-4 py-2 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white"
+      >
+        Edit info
+      </button>
     </div>
     <hr class="border-gray-200" />
     <div class="p-4">
@@ -23,5 +29,162 @@
   </div>
   <div *ngIf="!user">
     <p>Loading user information...</p>
+  </div>
+
+  <div *ngIf="isFormVisible" class="p-6 mt-4 bg-white rounded shadow-lg">
+    <h2 class="mb-4 text-2xl font-bold">Edit user info</h2>
+    <form
+      [formGroup]="editUserInfoForm"
+      (ngSubmit)="onSubmit()"
+      class="space-y-4 md:space-y-6"
+    >
+      <div>
+        <label
+          for="username"
+          class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Username</label
+        >
+        <input
+          type="text"
+          formControlName="username"
+          id="username"
+          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+          placeholder="name"
+          required
+        />
+        <div *ngIf="editUserInfoForm.controls['username'].invalid">
+          <span
+            class="error text-red-500"
+            *ngIf="editUserInfoForm.controls['username'].hasError('minlength')"
+          >
+            Lenght must be greater than 3
+          </span>
+          <span
+            class="error text-red-500"
+            *ngIf="editUserInfoForm.controls['username'].hasError('pattern')"
+          >
+            Username must have only letters, numbers, underscore, or dot.
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <label
+          for="email"
+          class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Email</label
+        >
+        <input
+          type="email"
+          formControlName="email"
+          id="email"
+          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+          placeholder="name@company.com"
+          required=""
+        />
+        <div *ngIf="editUserInfoForm.controls['email'].invalid">
+          <span
+            class="error text-red-500"
+            *ngIf="editUserInfoForm.controls['email'].hasError('pattern')"
+          >
+            Email doesn't match default email pattern
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <label
+          for="password"
+          class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Password</label
+        >
+        <div class="flex">
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="••••••••"
+            class="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            aria-label="Password"
+            aria-describedby="toggle-password"
+            required
+          />
+        </div>
+        <div *ngIf="editUserInfoForm.controls['password'].invalid">
+          <span
+            class="error text-red-500"
+            *ngIf="editUserInfoForm.controls['password'].hasError('minlength')"
+          >
+            Lenght must be greater than 8
+            <br />
+          </span>
+          <span
+            class="error text-red-500"
+            *ngIf="editUserInfoForm.controls['password'].hasError('pattern')"
+          >
+            Password must contain at least one number, uppercase, lowercase,
+            have at least 8 characters and cannot contain whitespace
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <label
+          for="firstName"
+          class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >First name</label
+        >
+        <input
+          type="text"
+          formControlName="firstName"
+          id="firstName"
+          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+          placeholder="name"
+          required
+        />
+        <div *ngIf="editUserInfoForm.controls['firstName'].invalid">
+          <span
+            class="error text-red-500"
+            *ngIf="editUserInfoForm.controls['firstName'].hasError('minlength')"
+          >
+            Lenght must be greater than 2
+          </span>
+        </div>
+      </div>
+
+      <div>
+        <label
+          for="lastName"
+          class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >Last name</label
+        >
+        <input
+          type="text"
+          formControlName="lastName"
+          id="lastName"
+          class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+          placeholder="Last name"
+          required
+        />
+        <div *ngIf="editUserInfoForm.controls['lastName'].invalid">
+          <span
+            class="error text-red-500"
+            *ngIf="editUserInfoForm.controls['lastName'].hasError('minlength')"
+          >
+            Lenght must be greater than 2
+          </span>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center pt-5">
+        <button
+          type="submit"
+          class="h-10 w-52 border rounded-md dark:border-gray-600"
+          [disabled]="editUserInfoForm.invalid"
+        >
+          Submit changes
+        </button>
+      </div>
+    </form>
   </div>
 </div>
