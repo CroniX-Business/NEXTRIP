@@ -10,7 +10,7 @@
       />
       <div class="ml-4 mb-28">
         <h2 class="text-2xl font-bold">{{ user.username }}</h2>
-        <h3 class="text-lg">{{ user.role }}</h3>
+        <h3 class="text-lg">role: {{ user.role }}</h3>
       </div>
       <button
         (click)="toggleForm()"
@@ -33,6 +33,7 @@
 
   <div *ngIf="isFormVisible" class="p-6 mt-4 bg-white rounded shadow-lg">
     <h2 class="mb-4 text-2xl font-bold">Edit user info</h2>
+
     <form
       [formGroup]="editUserInfoForm"
       (ngSubmit)="onSubmit()"
@@ -41,7 +42,7 @@
       <div>
         <label
           for="username"
-          class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >Username</label
         >
         <input
@@ -50,14 +51,18 @@
           id="username"
           class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
           placeholder="name"
-          required
         />
-        <div *ngIf="editUserInfoForm.controls['username'].invalid">
+        <div
+          *ngIf="
+            editUserInfoForm.controls['username'].touched &&
+            editUserInfoForm.controls['username'].invalid
+          "
+        >
           <span
             class="error text-red-500"
             *ngIf="editUserInfoForm.controls['username'].hasError('minlength')"
           >
-            Lenght must be greater than 3
+            Length must be greater than 3
           </span>
           <span
             class="error text-red-500"
@@ -71,7 +76,7 @@
       <div>
         <label
           for="email"
-          class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >Email</label
         >
         <input
@@ -80,9 +85,13 @@
           id="email"
           class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
           placeholder="name@company.com"
-          required=""
         />
-        <div *ngIf="editUserInfoForm.controls['email'].invalid">
+        <div
+          *ngIf="
+            editUserInfoForm.controls['email'].touched &&
+            editUserInfoForm.controls['email'].invalid
+          "
+        >
           <span
             class="error text-red-500"
             *ngIf="editUserInfoForm.controls['email'].hasError('pattern')"
@@ -95,7 +104,7 @@
       <div>
         <label
           for="password"
-          class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >Password</label
         >
         <div class="flex">
@@ -107,16 +116,19 @@
             class="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             aria-label="Password"
             aria-describedby="toggle-password"
-            required
           />
         </div>
-        <div *ngIf="editUserInfoForm.controls['password'].invalid">
+        <div
+          *ngIf="
+            editUserInfoForm.controls['password'].touched &&
+            editUserInfoForm.controls['password'].invalid
+          "
+        >
           <span
             class="error text-red-500"
             *ngIf="editUserInfoForm.controls['password'].hasError('minlength')"
           >
-            Lenght must be greater than 8
-            <br />
+            Length must be greater than 8
           </span>
           <span
             class="error text-red-500"
@@ -131,7 +143,7 @@
       <div>
         <label
           for="firstName"
-          class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >First name</label
         >
         <input
@@ -139,15 +151,19 @@
           formControlName="firstName"
           id="firstName"
           class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-          placeholder="name"
-          required
+          placeholder="First name"
         />
-        <div *ngIf="editUserInfoForm.controls['firstName'].invalid">
+        <div
+          *ngIf="
+            editUserInfoForm.controls['firstName'].touched &&
+            editUserInfoForm.controls['firstName'].invalid
+          "
+        >
           <span
             class="error text-red-500"
             *ngIf="editUserInfoForm.controls['firstName'].hasError('minlength')"
           >
-            Lenght must be greater than 2
+            Length must be greater than 2
           </span>
         </div>
       </div>
@@ -155,7 +171,7 @@
       <div>
         <label
           for="lastName"
-          class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >Last name</label
         >
         <input
@@ -164,14 +180,18 @@
           id="lastName"
           class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
           placeholder="Last name"
-          required
         />
-        <div *ngIf="editUserInfoForm.controls['lastName'].invalid">
+        <div
+          *ngIf="
+            editUserInfoForm.controls['lastName'].touched &&
+            editUserInfoForm.controls['lastName'].invalid
+          "
+        >
           <span
             class="error text-red-500"
             *ngIf="editUserInfoForm.controls['lastName'].hasError('minlength')"
           >
-            Lenght must be greater than 2
+            Length must be greater than 2
           </span>
         </div>
       </div>

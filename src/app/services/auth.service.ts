@@ -80,7 +80,6 @@ export class AuthService {
   private decodeToken(token: string): DecodedJwtPayload | null {
     try {
       const payload = jwtDecode<DecodedJwtPayload>(token);
-      console.log('Token payload:', payload);
       this.setSession(payload);
       return payload;
     } catch (e) {

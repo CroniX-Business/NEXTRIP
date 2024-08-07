@@ -17,6 +17,7 @@ import {
   passwordRegex,
   usernameRegex,
 } from '../../common/regex_constants';
+import { EditUserInfoService } from '../../services/editUserInfo.service';
 
 @Component({
   selector: 'app-profile',
@@ -31,7 +32,8 @@ export class ProfileComponent {
 
   constructor(
     private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private editUserInfoService: EditUserInfoService
   ) {
     this.getUserInfo();
   }
@@ -44,31 +46,22 @@ export class ProfileComponent {
 
   public editUserInfoForm = new FormGroup({
     username: new FormControl('', [
-      Validators.required,
       Validators.minLength(4),
       Validators.maxLength(20),
       Validators.pattern(usernameRegex),
     ]),
     password: new FormControl('', [
-      Validators.required,
       Validators.minLength(8),
       Validators.pattern(passwordRegex),
     ]),
-    email: new FormControl('', [
-      Validators.required,
-      Validators.pattern(emailRegex),
-    ]),
-    firstName: new FormControl(
-      '', [
-      Validators.required,
+    email: new FormControl('', [Validators.pattern(emailRegex)]),
+    firstName: new FormControl('', [
       Validators.minLength(2),
-      Validators.maxLength(20)
+      Validators.maxLength(20),
     ]),
-    lastName: new FormControl(
-      '', [
-      Validators.required,
+    lastName: new FormControl('', [
       Validators.minLength(2),
-      Validators.maxLength(20)
+      Validators.maxLength(20),
     ]),
   });
 
@@ -76,8 +69,7 @@ export class ProfileComponent {
     this.authService.getUserInfo().subscribe({
       next: (user) => {
         this.user = user;
-        console.log(this.user);
-        this.cdr.markForCheck(); // Notify Angular to check this component for updates
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Error fetching user information:', error);
@@ -86,20 +78,24 @@ export class ProfileComponent {
   }
 
   public onSubmit(): void {
-    // if (
-    //   this.editUserInfoForm.controls.username.value !== null &&
-    //   this.editUserInfoForm.controls.email.value !== null &&
-    //   this.editUserInfoForm.controls.password.value !== null
-    // ) {
-    //   this.authService
-    //     .register(
-    //       this.editUserInfoForm.controls.username.value,
-    //       this.editUserInfoForm.controls.email.value,
-    //       this.editUserInfoForm.controls.password.value,
-    //     )
-    //     .subscribe((value) => {
-    //       console.log(value)
-    //     });
-    // }
+      if (this.editUserInfoForm.valid && this.user?._id) {
+        this.editUserInfoService
+          .editUserInfo(this.user._id, this.editUserInfoForm.value)
+          .subscribe({
+            next: (success) => {
+              if (success) {
+                this.getUserInfo();
+                console.log('User information updated successfully.');
+              } else {
+                console.error('Failed to update user information.');
+              }
+            },
+            error: (error) => {
+              console.error('Error updating user information:', error);
+            },
+          });
+      } else {
+        console.warn('Form is invalid or user ID is missing.');
+      }
   }
 }
