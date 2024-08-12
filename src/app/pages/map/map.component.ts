@@ -4,7 +4,6 @@ import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
 import { Map, Marker, Popup } from 'maplibre-gl';
 import {
@@ -26,30 +25,36 @@ export class MapComponent implements AfterViewInit {
   MAP_STYLE_API: string = environment.MAP_STYLE_API;
   MAP_STYLE_JSON: string = environment.MAP_STYLE_JSON;
 
+  checkboxLabels = [
+    'bar',
+    'restaurant',
+    'museum',
+  ];
+
+  generatorForm = new FormGroup({
+    bar: new FormControl(false),
+    restaurant: new FormControl(false),
+    museum: new FormControl(false),
+  });
+
+  constructor(private generatorService: GeneratorService) {}
+
   @ViewChild('map')
   private mapContainer!: ElementRef<HTMLElement>;
 
   map!: Map;
   directions!: CustomMapLibreGlDirections;
   initialState: [number, number] = [0, 0];
+
+  isCollapsed: boolean = false;
   showModal: boolean = false;
-
-  generatorForm: FormGroup<{
-    startCity: FormControl<string | null>;
-    endCity: FormControl<string | null>;
-  }>;
-
-  constructor(private generatorService: GeneratorService) {
-    this.generatorForm = new FormGroup({
-      startCity: new FormControl('', Validators.required),
-      endCity: new FormControl('', Validators.required),
-    });
-  }
-
-  isCollapsed = false;
 
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
+  }
+
+  openModal() {
+    this.showModal = !this.showModal;
   }
 
   myLocation() {
@@ -59,10 +64,6 @@ export class MapComponent implements AfterViewInit {
       center: this.initialState!,
       zoom: 11,
     });
-  }
-
-  openModal() {
-    this.showModal = !this.showModal;
   }
 
   async ngAfterViewInit() {
@@ -169,9 +170,17 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
+  openModalGenerateTrip(): void {
+    this.openModal();
+  }
+
   generateTrip(): void {
+    //console.log(this.generatorForm.value)
     this.generatorService
-      .generateRoute(this.directions.waypointsFeatures)
+      .generateRoute(
+        this.directions.waypointsFeatures,
+        this.generatorForm.value
+      )
       .subscribe({
         next: (response) => {
           console.log('Trip generated successfully', response);

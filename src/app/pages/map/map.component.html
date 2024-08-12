@@ -1,15 +1,62 @@
 <!-- app.component.html -->
-<div class="flex space-x-4">
+<div class="flex flex-col lg:flex-row lg:space-x-4 space-y-4 lg:space-y-0">
   <div
-    [ngClass]="{ 'w-full': isCollapsed, 'w-1/2': !isCollapsed }"
-    class="map-container relative p-4 pt-16 border-gray-200 rounded-lg dark:border-gray-700 transition-all duration-300"
+    [ngClass]="{ 'w-full': isCollapsed, 'lg:w-1/2': !isCollapsed }"
+    class="con-1 map-container relative p-4 pt-16 border-gray-200 rounded-lg dark:border-gray-700 transition-all duration-300"
   >
-    <button
+    <!-- <button
       (click)="generateTrip()"
       class="absolute top-20 left-6 px-4 py-2 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white"
     >
       Generiraj putovanje
-    </button>
+    </button> -->
+
+    <!-- Conditional rendering of button or modal -->
+    <ng-container *ngIf="!showModal; else modalContent">
+      <button
+        (click)="openModalGenerateTrip()"
+        class="absolute top-20 left-6 px-4 py-2 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white transition-transform duration-300 transform hover:scale-95"
+      >
+        Open generator options
+      </button>
+    </ng-container>
+
+    <ng-template #modalContent>
+      <div
+        class="absolute top-20 left-6 w-72 p-6 bg-slate-200 border border-gray-300 rounded-lg shadow-md z-50 transition-transform duration-300 transform scale-100"
+      >
+        <button type="button" (click)="openModal()" class="float-end">
+          <i class="fa-solid fa-x" style="color: #000000"></i>
+        </button>
+        <form
+          [formGroup]="generatorForm"
+          (ngSubmit)="generateTrip()"
+          class="space-y-4"
+        >
+          <div class="space-y-4">
+            <div *ngFor="let label of checkboxLabels">
+              <div class="flex items-center">
+                <input
+                  type="checkbox"
+                  [formControlName]="label"
+                  id="{{ label }}"
+                  class="mr-2"
+                />
+                <label [for]="label" class="text-gray-700">
+                  {{ label }}
+                </label>
+              </div>
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="px-4 py-2 bg-cyan-800 text-white rounded-2xl shadow-md focus:outline-none hover:bg-slate-200 hover:text-black transition-all duration-300"
+          >
+            Generate Trip
+          </button>
+        </form>
+      </div>
+    </ng-template>
 
     <button
       (click)="myLocation()"
@@ -24,27 +71,30 @@
   </div>
 
   <div
-    [ngClass]="{ hidden: isCollapsed, 'w-1/2': !isCollapsed }"
-    class="map-container relative p-4 pt-16 border-gray-200 rounded-lg dark:border-gray-700 transition-all duration-300"
+    class="con-2 map-container ps-10 relative p-4 pt-16 border-gray-200 rounded-lg dark:border-gray-700 transition-all duration-300"
+    [ngClass]="{ 'lg:w-1/2': !isCollapsed }"
   >
-    <h2 class="text-xl font-semibold">Another Container</h2>
+    <div [ngClass]="{ hidden: isCollapsed, 'lg:w-1/2': !isCollapsed }">
+      <h2 class="text-xl font-semibold">Another Container</h2>
+      <button
+        (click)="saveTrip()"
+        class="absolute bottom-6 right-6 px-4 py-2 bg-blue-500 text-white rounded-2xl shadow-md focus:outline-none z-40"
+      >
+        Save Trip
+        <i class="fa-solid fa-floppy-disk" style="color: #ffffff"></i>
+      </button>
+    </div>
     <button
-      (click)="saveTrip()"
-      class="absolute bottom-6 right-6 px-4 py-2 bg-blue-500 text-white rounded-2xl shadow-md focus:outline-none z-40"
+      (click)="toggleCollapse()"
+      class="absolute top-20 right-6 px-4 py-2 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white hidden lg:block"
     >
-      Save Trip
-      <i class="fa-solid fa-floppy-disk" style="color: #ffffff"></i>
+      <i
+        [ngClass]="
+          isCollapsed
+            ? 'fa-solid fa-chevron-left '
+            : 'fa-solid fa-chevron-right'
+        "
+      ></i>
     </button>
   </div>
-
-  <button
-    (click)="toggleCollapse()"
-    class="absolute top-20 right-6 px-4 py-2 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white"
-  >
-    <i
-      [ngClass]="
-        isCollapsed ? 'fa-solid fa-chevron-left ' : 'fa-solid fa-chevron-right'
-      "
-    ></i>
-  </button>
 </div>

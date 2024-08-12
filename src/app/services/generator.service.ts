@@ -14,11 +14,11 @@ export class GeneratorService {
   constructor(private http: HttpClient) {}
 
 
-  generateRoute(waypointsFeatures: Feature<Point, GeoJsonProperties>[]): Observable<any> {
-    return this.createRoute(waypointsFeatures);
+  generateRoute(waypointsFeatures: Feature<Point, GeoJsonProperties>[], params: object): Observable<any> {
+    return this.createRoute(waypointsFeatures, params);
   }
 
-  private createRoute(waypointsFeatures: Feature<Point, GeoJsonProperties>[]): Observable<any> {
-    return this.http.post<any>(`${this.BACKEND_API}/generator`, { waypointsFeatures: waypointsFeatures });
+  private createRoute(waypointsFeatures: Feature<Point, GeoJsonProperties>[], params: object): Observable<any> {
+    return this.http.post<any>(`${this.BACKEND_API}/generator`, { waypointsFeatures: waypointsFeatures, params: params });
   }
 }
