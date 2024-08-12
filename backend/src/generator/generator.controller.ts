@@ -17,35 +17,3 @@ export class GeneratorController {
     return result;
   }
 }
-
-/* 
-  private culturalPlaceTypes = [
-    'art_gallery',
-    'library',
-    'church',
-    'hindu_temple',
-    'synagogue',
-    'museum',
-  ];
-
-  private funPlaceTypes = [
-    'amusement_park',
-    'aquarium',
-    'bar',
-    'bowling_alley',
-    'casino',
-    'night_club',
-    'park',
-    'movie_theater',
-    'tourist_attraction',
-    'zoo',
-  ];
-  fun: string;
-
-    //const type = params.typeOfTrip === 'exploring' ? this.culturalPlaceTypes : this.funPlaceTypes;
-
-    const trueKeys = Object.keys(params).filter(key => params[key]);
-
-    this.fun = trueKeys.join('|');
-    Logger.debug(this.fun)
-*/

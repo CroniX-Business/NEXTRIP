@@ -1,3 +1,5 @@
 export interface TripDto {
-  typeOfTrip: 'exploring' | 'party';
+  bar: '';
+  restaurant: '';
+  museum: '';
 }
