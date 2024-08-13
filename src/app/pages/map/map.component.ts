@@ -1,10 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Map, Marker, Popup } from 'maplibre-gl';
 import {
   LoadingIndicatorControl,
@@ -13,6 +9,7 @@ import {
 import { GeneratorService } from '../../services/generator.service';
 import { environment } from '../../../environments/environment';
 import CustomMapLibreGlDirections from './custom-directions';
+import { generatorParams } from '../../models/Generator';
 
 @Component({
   selector: 'app-map',
@@ -25,13 +22,9 @@ export class MapComponent implements AfterViewInit {
   MAP_STYLE_API: string = environment.MAP_STYLE_API;
   MAP_STYLE_JSON: string = environment.MAP_STYLE_JSON;
 
-  checkboxLabels = [
-    'bar',
-    'restaurant',
-    'museum',
-  ];
+  checkboxLabels = ['bar', 'restaurant', 'museum'];
 
-  generatorForm = new FormGroup({
+  generatorParamsForm = new FormGroup({
     bar: new FormControl(false),
     restaurant: new FormControl(false),
     museum: new FormControl(false),
@@ -175,12 +168,16 @@ export class MapComponent implements AfterViewInit {
   }
 
   generateTrip(): void {
-    //console.log(this.generatorForm.value)
+    const generatorParams: generatorParams = {
+      typeOfTrip: {
+        bar: this.generatorParamsForm.controls.bar.value,
+        restaurant: this.generatorParamsForm.controls.restaurant.value,
+        museum: this.generatorParamsForm.controls.museum.value,
+      },
+    };
+
     this.generatorService
-      .generateRoute(
-        this.directions.waypointsFeatures,
-        this.generatorForm.value
-      )
+      .generateRoute(this.directions.waypointsFeatures, generatorParams)
       .subscribe({
         next: (response) => {
           console.log('Trip generated successfully', response);

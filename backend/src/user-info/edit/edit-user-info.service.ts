@@ -24,7 +24,7 @@ export class EditUserInfoService {
         { runValidators: true },
       );
 
-      Logger.log("bok 2");
+      Logger.log('bok 2');
 
       if (updateResult.matchedCount === 0) {
         throw new NotFoundException('User not found');

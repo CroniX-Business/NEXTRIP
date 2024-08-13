@@ -14,7 +14,7 @@ import { EditModule } from 'user-info/edit/edit.module';
     MongooseModule.forRoot(environment.MONGO_URI),
     AuthModule,
     ContactModule,
-    EditModule
+    EditModule,
   ],
   controllers: [AppController, GeneratorController],
   providers: [AppService, GeneratorService],
