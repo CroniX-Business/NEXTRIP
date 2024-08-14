@@ -1,8 +1,8 @@
 export interface TripDto {
   typeOfTrip: {
-    bar: boolean;
-    restaurant: boolean;
-    museum: boolean;
+    bar: boolean | null | undefined;
+    restaurant: boolean | null | undefined;
+    museum: boolean | null | undefined;
   };
   radius: number;
 }
@@ -16,5 +16,5 @@ export interface Place {
     longitude: number;
   };
   primaryType: string;
-  rating: string;
+  rating: number;
 }

@@ -6,6 +6,7 @@
     "start": "ng serve",
     "build": "npm run config && ng build",
     "config": "ts-node src/environments/set-env.ts",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:NEXTRIP": "node dist/nextrip/server/server.mjs"
