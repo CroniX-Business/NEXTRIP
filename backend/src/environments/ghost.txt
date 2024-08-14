@@ -1,1 +1,1 @@
-Used only from pushing a environments folder to github
+Used only for pushing a environments folder to github
