@@ -16,8 +16,6 @@ export default class CustomMapLibreGlDirections extends MapLibreGlDirections {
     super(map, configuration);
   }
 
-  // augmented public interface
-
   get waypointsFeatures() {
     return this._waypoints;
   }

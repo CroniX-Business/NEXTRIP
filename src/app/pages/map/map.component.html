@@ -75,7 +75,33 @@
     [ngClass]="{ 'lg:w-1/2': !isCollapsed }"
   >
     <div [ngClass]="{ hidden: isCollapsed, 'lg:w-1/2': !isCollapsed }">
-      <h2 class="text-xl font-semibold">Another Container</h2>
+      <h2 class="text-xl font-semibold text-white text-center">Trip Info</h2>
+
+      <!-- Display "No trip generated" if places is null or empty -->
+      <div
+        *ngIf="!places || places.length === 0"
+        class="text-center text-gray-500"
+      >
+        <p>No trip generated</p>
+      </div>
+
+      <!-- Display list of places if places is not null and not empty -->
+      <div *ngIf="places && places.length > 0">
+        <div
+          *ngFor="let place of places"
+          class="mb-4 p-4 border border-gray-300 rounded-lg shadow-sm"
+        >
+          <h3 class="text-lg font-bold">{{ place.displayName.text }}</h3>
+          <p class="text-sm text-gray-600">
+            <span class="font-medium">Primary Type:</span>
+            {{ place.primaryType }}
+          </p>
+          <p class="text-sm text-gray-600">
+            <span class="font-medium">Rating:</span> {{ place.rating }}
+          </p>
+        </div>
+      </div>
+
       <button
         (click)="saveTrip()"
         class="absolute bottom-6 right-6 px-4 py-2 bg-blue-500 text-white rounded-2xl shadow-md focus:outline-none z-40"
@@ -84,6 +110,7 @@
         <i class="fa-solid fa-floppy-disk" style="color: #ffffff"></i>
       </button>
     </div>
+
     <button
       (click)="toggleCollapse()"
       class="absolute top-20 right-6 px-4 py-2 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white hidden lg:block"

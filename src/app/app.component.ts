@@ -14,7 +14,7 @@ import { initFlowbite } from 'flowbite';
 export class AppComponent implements OnInit {
   static isBrowser = new BehaviorSubject<boolean>(false);
 
-  constructor(@Inject(PLATFORM_ID) private platformId: any) {
+  constructor(@Inject(PLATFORM_ID) private platformId: number) {
     AppComponent.isBrowser.next(isPlatformBrowser(platformId));
   }
 

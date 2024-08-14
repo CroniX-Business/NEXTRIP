@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Map, Marker, Popup } from 'maplibre-gl';
 import {
@@ -9,7 +9,9 @@ import {
 import { GeneratorService } from '../../services/generator.service';
 import { environment } from '../../../environments/environment';
 import CustomMapLibreGlDirections from './custom-directions';
-import { generatorParams } from '../../models/Generator';
+import { generatorParams, Place } from '../../models/Generator';
+
+('../assets/map/images/direction-arrow.png?url');
 
 @Component({
   selector: 'app-map',
@@ -30,7 +32,7 @@ export class MapComponent implements AfterViewInit {
     museum: new FormControl(false),
   });
 
-  constructor(private generatorService: GeneratorService) {}
+  constructor(private generatorService: GeneratorService, private cdr: ChangeDetectorRef) {}
 
   @ViewChild('map')
   private mapContainer!: ElementRef<HTMLElement>;
@@ -38,6 +40,7 @@ export class MapComponent implements AfterViewInit {
   map!: Map;
   directions!: CustomMapLibreGlDirections;
   initialState: [number, number] = [0, 0];
+  places: Place[] | null = null;
 
   isCollapsed: boolean = false;
   showModal: boolean = false;
@@ -113,6 +116,8 @@ export class MapComponent implements AfterViewInit {
           this.directions = new CustomMapLibreGlDirections(this.map, {
             requestOptions: {
               alternatives: 'false',
+              overview: 'full',
+              steps: 'true',
             },
             layers,
           });
@@ -174,19 +179,44 @@ export class MapComponent implements AfterViewInit {
         restaurant: this.generatorParamsForm.controls.restaurant.value,
         museum: this.generatorParamsForm.controls.museum.value,
       },
+      radius: 1600,
     };
 
     this.generatorService
       .generateRoute(this.directions.waypointsFeatures, generatorParams)
       .subscribe({
         next: (response) => {
-          console.log('Trip generated successfully', response);
-          this.directions.interactive = false;
+          //console.log('Trip generated successfully', response);
+          this.handleTripGenerationSuccess(response);
         },
         error: (error) => {
           console.error('Error generating trip', error);
         },
       });
+  }
+
+  private handleTripGenerationSuccess(response: Place[]): void {
+    this.places = response;
+    this.cdr.markForCheck();
+    
+    console.log(this.places)
+    this.directions.clear();
+    this.directions.interactive = false;
+
+    const waypoints: [number, number][] = response
+      .filter(
+        (
+          locationObj
+        ): locationObj is Place & {
+          location: { longitude: number; latitude: number };
+        } => !!locationObj.location
+      )
+      .map((locationObj) => [
+        locationObj.location.longitude,
+        locationObj.location.latitude,
+      ]);
+
+    this.directions.setWaypoints(waypoints);
   }
 
   saveTrip(): void {}

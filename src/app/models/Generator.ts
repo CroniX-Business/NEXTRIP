@@ -4,6 +4,7 @@ export interface generatorParams {
     restaurant: boolean  | null | undefined;
     museum: boolean | null | undefined;
   };
+  radius: number;
 }
 
 export interface Place {
@@ -11,9 +12,9 @@ export interface Place {
     text: string;
   };
   location?: {
-    lat: number;
-    lng: number;
+    latitude: number;
+    longitude: number;
   };
   primaryType: string;
-  rating: string;
+  rating: number;
 }
