@@ -8,11 +8,14 @@ import { environment } from '../../environments/environment';
 })
 export class EditUserInfoService {
   private BACKEND_API = environment.BACKEND_API;
-  private userID: string = '';
 
   constructor(private http: HttpClient) { }
 
   public editUserInfo(userID: string, userInfo: object): Observable<boolean> {
+    return this.editUserInfoPrivate(userID, userInfo);
+  }
+
+  private editUserInfoPrivate(userID: string, userInfo: object): Observable<boolean> {
     return this.http.put(`${this.BACKEND_API}/userInfo/edit/${userID}`, userInfo).pipe(
       map(() => true),
       catchError((error) => {

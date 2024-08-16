@@ -1,192 +1,12 @@
-// import { Feature, Point } from '@maplibre/maplibre-gl-directions';
-// import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-// import { GeoJsonProperties } from 'geojson';
-// import axios from 'axios';
-// import { environment } from 'environments/environment';
-// import { TripDto, Place } from './generator.dto';
-
-// const GOOGLE_PLACES_SEARCH_NEARBY_URL =
-//   'https://places.googleapis.com/v1/places:searchNearby';
-
-// @Injectable()
-// export class GeneratorService {
-//   defaultRadius: number = 1000;
-
-//   async generateTrip(
-//     waypoints: Feature<Point, GeoJsonProperties>[],
-//     generatorParams: TripDto,
-//   ): Promise<any> {
-//     try {
-//       const trueKeys = this.getTrueKeys(generatorParams);
-
-//       const responses = await Promise.all(
-//         waypoints.map(async (waypoint) => {
-//           const [longitude, latitude] = this.getCoordinates(waypoint);
-//           const radius = generatorParams.radius || this.defaultRadius;
-
-//           return radius < 1500
-//             ? await this.makeSingleApiCall(
-//                 latitude,
-//                 longitude,
-//                 radius,
-//                 trueKeys,
-//               )
-//             : await this.makeMultipleApiCalls(
-//                 latitude,
-//                 longitude,
-//                 radius,
-//                 trueKeys,
-//               );
-//         }),
-//       );
-
-//       const filteredPlaces = this.filterAndMapPlaces(responses.flat());
-
-//       const combinedPlaces = this.combinePlaces(
-//         filteredPlaces,
-//         waypoints.length,
-//       );
-
-//       return combinedPlaces;
-//     } catch (error) {
-//       this.handleError(error);
-//     }
-//   }
-
-//   private getTrueKeys(generatorParams: TripDto): string[] {
-//     return Object.keys(generatorParams.typeOfTrip).filter(
-//       (key) => generatorParams.typeOfTrip[key],
-//     );
-//   }
-
-//   private getCoordinates(
-//     waypoint: Feature<Point, GeoJsonProperties>,
-//   ): [number, number] {
-//     const { coordinates } = waypoint.geometry;
-//     return [coordinates[0], coordinates[1]];
-//   }
-
-//   private async makeSingleApiCall(
-//     latitude: number,
-//     longitude: number,
-//     radius: number,
-//     trueKeys: string[],
-//   ): Promise<Place[]> {
-//     const requestBody = {
-//       includedTypes: trueKeys,
-//       maxResultCount: 20,
-//       locationRestriction: {
-//         circle: {
-//           center: { latitude, longitude },
-//           radius,
-//         },
-//       },
-//       rankPreference: 'POPULARITY',
-//     };
-
-//     const response = await axios.post(
-//       GOOGLE_PLACES_SEARCH_NEARBY_URL,
-//       requestBody,
-//       {
-//         headers: this.getRequestHeaders(),
-//       },
-//     );
-
-//     return response.data.places || [];
-//   }
-
-//   private async makeMultipleApiCalls(
-//     latitude: number,
-//     longitude: number,
-//     radius: number,
-//     trueKeys: string[],
-//   ): Promise<Place[]> {
-//     const requests = trueKeys.map((type) => {
-//       const requestBody = {
-//         includedTypes: [type],
-//         maxResultCount: 10,
-//         locationRestriction: {
-//           circle: {
-//             center: { latitude, longitude },
-//             radius,
-//           },
-//         },
-//         rankPreference: 'POPULARITY',
-//       };
-
-//       return axios.post(GOOGLE_PLACES_SEARCH_NEARBY_URL, requestBody, {
-//         headers: this.getRequestHeaders(),
-//       });
-//     });
-
-//     const responses = await Promise.all(requests);
-
-//     return responses.flatMap((response) => response.data.places || []);
-//   }
-
-//   private getRequestHeaders(): Record<string, string> {
-//     return {
-//       'Content-Type': 'application/json',
-//       'X-Goog-Api-Key': environment.GOOGLE_PLACES_API,
-//       'X-Goog-FieldMask':
-//         'places.displayName,places.rating,places.primaryType,places.location',
-//     };
-//   }
-
-//   private filterAndMapPlaces(places: Place[]): Place[] {
-//     return places
-//       .filter((place) => place.rating && place.rating > 4.6)
-//       .map((place) => ({
-//         ...place,
-//         displayName: place.displayName,
-//         primaryType: place.primaryType,
-//       }));
-//   }
-
-//   private combinePlaces(places: Place[], waypointCount: number): Place[] {
-//     if (waypointCount === 1) {
-//       return places;
-//     }
-
-//     if (waypointCount === 2) {
-//       const splitIndex = Math.floor(places.length * 0.4);
-//       return [...places.slice(0, splitIndex), ...places.slice(splitIndex)];
-//     }
-
-//     if (waypointCount > 2) {
-//       const splitIndex = Math.floor(places.length * 0.2);
-//       return [...places.slice(0, splitIndex), ...places.slice(splitIndex)];
-//     }
-
-//     return places;
-//   }
-
-//   private handleError(error: any): void {
-//     Logger.error(
-//       'Error fetching nearby places',
-//       error.message,
-//       'GeneratorService',
-//     );
-//     if (error.response) {
-//       Logger.error(
-//         `API Response Error: ${error.response.data}`,
-//         null,
-//         'GeneratorService',
-//       );
-//     }
-//     throw new HttpException(
-//       'Error fetching nearby places',
-//       HttpStatus.INTERNAL_SERVER_ERROR,
-//     );
-//   }
-// }
-
 import { Feature, Point } from '@maplibre/maplibre-gl-directions';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { GeoJsonProperties } from 'geojson';
 import axios from 'axios';
 import { environment } from 'environments/environment';
-import { TripDto, Place } from './generator.dto';
+import { TripDto, Place, Trip } from './generator.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from 'schemas/user.schema';
+import { Model, Types } from 'mongoose';
 
 const GOOGLE_PLACES_SEARCH_NEARBY_URL =
   'https://places.googleapis.com/v1/places:searchNearby';
@@ -194,6 +14,44 @@ const GOOGLE_PLACES_SEARCH_NEARBY_URL =
 @Injectable()
 export class GeneratorService {
   defaultRadius: number = 1000;
+
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+
+  async getTrips(userId: string): Promise<Trip[]> {
+    const user = await this.userModel.findById(userId).select('trips').exec();
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user.trips;
+  }
+
+  async saveTrip(
+    userId: string,
+    places: Place[],
+    tripName: string,
+  ): Promise<boolean> {
+    try {
+      const user = await this.userModel.findById(userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      const newTrip = {
+        tripId: new Types.ObjectId() as Types.ObjectId,
+        tripName,
+        places,
+        timeSaved: new Date(),
+      };
+
+      user.trips.push(newTrip);
+      await user.save();
+      return true;
+    } catch (error) {
+      console.error('Error saving trip:', error);
+      return false;
+    }
+  }
 
   async generateTrip(
     waypoints: Feature<Point, GeoJsonProperties>[],
@@ -334,7 +192,7 @@ export class GeneratorService {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': environment.GOOGLE_PLACES_API,
       'X-Goog-FieldMask':
-        'places.displayName,places.rating,places.primaryType,places.location',
+        'places.displayName,places.formattedAddress,places.rating,places.primaryType,places.location,places.photos,places.currentOpeningHours,places.priceLevel,',
     };
   }
 
@@ -411,23 +269,4 @@ export class GeneratorService {
   private deg2rad(deg: number): number {
     return deg * (Math.PI / 180);
   }
-
-  // private handleError(error: any): void {
-  //   Logger.error(
-  //     'Error fetching nearby places',
-  //     error.message,
-  //     'GeneratorService',
-  //   );
-  //   if (error.response) {
-  //     Logger.error(
-  //       `API Response Error: ${error.response.data}`,
-  //       null,
-  //       'GeneratorService',
-  //     );
-  //   }
-  //   throw new HttpException(
-  //     'Error fetching nearby places',
-  //     HttpStatus.INTERNAL_SERVER_ERROR,
-  //   );
-  // }
 }

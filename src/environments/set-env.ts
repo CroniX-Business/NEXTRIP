@@ -29,6 +29,7 @@ const setEnv = () => {
     BACKEND_API: '${process.env["BACKEND_API"] || ''}',
     MAP_STYLE_API: '${process.env["MAP_STYLE_API"] || ''}',
     MAP_STYLE_JSON: '${process.env["MAP_STYLE_JSON"] || ''}',
+    GOOGLE_PLACES_API: '${process.env["GOOGLE_PLACES_API"] || ''}',
   };
   `;
 

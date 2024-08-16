@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { User } from '../schemas/user.schema';
@@ -16,9 +21,23 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<string> {
-    const user = new this.userModel({ username, email, password });
-    await user.save();
-    return this.createToken(user._id as Types.ObjectId);
+    try {
+      const existingUser = await this.userModel.findOne({
+        $or: [{ email }, { username }],
+      });
+      if (existingUser) {
+        throw new ConflictException('User already exists');
+      }
+
+      const user = new this.userModel({ username, email, password });
+      await user.validate();
+      await user.save();
+
+      return this.createToken(user._id as Types.ObjectId);
+    } catch (error) {
+      Logger.error('Failed to register user', error.stack);
+      throw new InternalServerErrorException('Failed to register user');
+    }
   }
 
   async login(email: string, password: string): Promise<string | null> {

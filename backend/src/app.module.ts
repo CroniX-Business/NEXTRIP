@@ -4,10 +4,9 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { environment } from 'environments/environment';
-import { GeneratorController } from './generator/generator.controller';
-import { GeneratorService } from './generator/generator.service';
 import { ContactModule } from './contact/contact.module';
 import { EditModule } from 'user-info/edit/edit.module';
+import { GeneratorModule } from './generator/generator.module';
 
 @Module({
   imports: [
@@ -15,8 +14,9 @@ import { EditModule } from 'user-info/edit/edit.module';
     AuthModule,
     ContactModule,
     EditModule,
+    GeneratorModule,
   ],
-  controllers: [AppController, GeneratorController],
-  providers: [AppService, GeneratorService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

@@ -14,3 +14,9 @@ body {
 .loader {
   @apply animate-spin rounded-full h-48 w-48 border-t-8 border-b-8 border-blue-500 absolute inset-0 m-auto;
 }
+
+.places-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}

@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Map, Marker, Popup } from 'maplibre-gl';
 import {
@@ -10,6 +16,8 @@ import { GeneratorService } from '../../services/generator.service';
 import { environment } from '../../../environments/environment';
 import CustomMapLibreGlDirections from './custom-directions';
 import { generatorParams, Place } from '../../models/Generator';
+import { User } from '../../models/User';
+import { AuthService } from '../../services/auth.service';
 
 ('../assets/map/images/direction-arrow.png?url');
 
@@ -32,7 +40,18 @@ export class MapComponent implements AfterViewInit {
     museum: new FormControl(false),
   });
 
-  constructor(private generatorService: GeneratorService, private cdr: ChangeDetectorRef) {}
+  saveTripNameForm = new FormGroup({
+    tripName: new FormControl(''),
+  });
+
+  constructor(
+    private generatorService: GeneratorService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.getUserInfo();
+    this.places = this.generatorService.getPlacesFromTrip();
+  }
 
   @ViewChild('map')
   private mapContainer!: ElementRef<HTMLElement>;
@@ -40,17 +59,25 @@ export class MapComponent implements AfterViewInit {
   map!: Map;
   directions!: CustomMapLibreGlDirections;
   initialState: [number, number] = [0, 0];
+
+  user: User | null = null;
   places: Place[] | null = null;
+  markers: Marker[] = [];
 
   isCollapsed: boolean = false;
-  showModal: boolean = false;
+  showModalParams: boolean = false;
+  showModalSaveTrip: boolean = false;
 
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
   }
 
-  openModal() {
-    this.showModal = !this.showModal;
+  toggleModalParams() {
+    this.showModalParams = !this.showModalParams;
+  }
+
+  toggleModalSave() {
+    this.showModalSaveTrip = !this.showModalSaveTrip;
   }
 
   myLocation() {
@@ -62,9 +89,33 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
+  getUserInfo(): void {
+    this.authService.getUserInfo().subscribe({
+      next: (user) => {
+        this.user = user;
+      },
+      error: (error) => {
+        console.error('Error fetching user information:', error);
+      },
+    });
+  }
+
+  getOpeningHoursDescription(place: Place): string {
+    const dayIndex = new Date().getDay();
+    return (
+      place.currentOpeningHours?.weekdayDescriptions?.[dayIndex] ||
+      'Hours not available'
+    );
+  }
+
   async ngAfterViewInit() {
     this.mapContainer.nativeElement.classList.add('loader');
     await this.initializeMap();
+    setTimeout(() => {
+      if (this.places && this.places.length > 0) {
+        this.handleTripGenerationSuccess(this.places);
+      }
+    }, 1000);
   }
 
   async initializeMap() {
@@ -138,6 +189,7 @@ export class MapComponent implements AfterViewInit {
       console.error(error);
     }
   }
+
   setUserMarker() {
     const UserInfo = new Popup({ offset: 25 }).setText('Your location');
 
@@ -169,7 +221,11 @@ export class MapComponent implements AfterViewInit {
   }
 
   openModalGenerateTrip(): void {
-    this.openModal();
+    this.toggleModalParams();
+  }
+
+  openModalSaveTrip(): void {
+    this.toggleModalSave();
   }
 
   generateTrip(): void {
@@ -198,8 +254,7 @@ export class MapComponent implements AfterViewInit {
   private handleTripGenerationSuccess(response: Place[]): void {
     this.places = response;
     this.cdr.markForCheck();
-    
-    console.log(this.places)
+
     this.directions.clear();
     this.directions.interactive = false;
 
@@ -216,8 +271,110 @@ export class MapComponent implements AfterViewInit {
         locationObj.location.latitude,
       ]);
 
+    this.setPlaceMarker();
     this.directions.setWaypoints(waypoints);
   }
 
-  saveTrip(): void {}
+  setPlaceMarker(): void {
+    this.places?.forEach((place, index) => {
+      if (place.location) {
+        const el = document.createElement('div');
+        el.className = 'marker';
+
+        const photoReference = place.photos?.[0]?.name.split('/').pop();
+
+        // Construct the image URL using the photo reference and Google Place Photos API
+        const imageUrl = photoReference
+          ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=60&photo_reference=${photoReference}&key=${environment.GOOGLE_PLACES_API}`
+          : `https://picsum.photos/seed/${index + 1}/60/60`;
+
+        el.style.backgroundImage = `url(${imageUrl})`;
+        el.style.width = '45px';
+        el.style.height = '45px';
+        el.style.backgroundSize = 'cover';
+        el.style.borderRadius = '30%';
+        el.style.display = 'inline-block';
+        el.style.overflow = 'hidden';
+
+        const popupContent = `
+          <div class="p-4 max-w-xs">
+            <strong class="text-lg">${index + 1}. ${
+          place.displayName.text
+        }</strong><br>
+            <strong>Rating:</strong> ${place.rating} ⭐<br>
+            <strong>Address:</strong> ${place.formattedAddress || 'N/A'}<br>
+            <strong>Open Now:</strong> ${
+              place.currentOpeningHours?.openNow ? 'Yes' : 'No'
+            }<br>
+            ${
+              place.currentOpeningHours?.weekdayDescriptions?.[
+                new Date().getDay()
+              ] || ''
+            }<br>
+            <div class="mt-4 flex overflow-x-auto space-x-4">
+              ${place.photos
+                ?.map((photo) => {
+                  const photoReference = photo.name.split('/').pop();
+                  return `
+                  <img 
+                    src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=150&photo_reference=${photoReference}&key=${environment.GOOGLE_PLACES_API}"
+                    class="w-36 h-24 object-cover rounded-md shadow-sm"
+                  />`;
+                })
+                .join('')}
+            </div>
+          </div>
+        `;
+
+        const popup = new Popup({ offset: 25 }).setHTML(popupContent);
+
+        const marker = new Marker({ element: el })
+          .setLngLat([place.location.longitude, place.location.latitude])
+          .setPopup(popup)
+          .addTo(this.map);
+
+        this.markers.push(marker);
+      }
+    });
+  }
+
+  clearTrip(): void {
+    this.directions.clear();
+
+    this.markers.forEach((marker) => marker.remove());
+    this.markers = [];
+
+    this.places = [];
+
+    this.directions.interactive = true;
+  }
+
+  saveTrip(): void {
+    if (
+      this.places &&
+      this.user &&
+      this.saveTripNameForm.controls.tripName.value
+    ) {
+      this.generatorService
+        .saveRoute(
+          this.user?._id,
+          this.places,
+          this.saveTripNameForm.controls.tripName.value
+        )
+        .subscribe({
+          next: (success) => {
+            if (success) {
+              alert('Trip saved successfully!');
+            } else {
+              alert('Failed to save trip.');
+            }
+            this.toggleModalSave();
+          },
+          error: (err) => {
+            console.error('Error saving trip:', err);
+            alert('An error occurred while saving the trip.');
+          },
+        });
+    }
+  }
 }

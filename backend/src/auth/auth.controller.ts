@@ -7,6 +7,7 @@ import {
   Get,
   Headers,
   UnauthorizedException,
+  ConflictException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from 'schemas/user.schema';
@@ -25,7 +26,13 @@ export class AuthController {
       const token = await this.authService.register(username, email, password);
       return { token };
     } catch (error) {
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      if (error instanceof ConflictException) {
+        throw new ConflictException('User already exists');
+      }
+      throw new HttpException(
+        'User registration failed',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 

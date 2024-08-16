@@ -89,13 +89,13 @@ export class AuthService {
   }
 
   private hasTokenExpired(payload: DecodedJwtPayload): boolean {
-    const expirationTime = payload.exp * 1000; // Convert expiration time from seconds to milliseconds
-    const currentTime = moment().valueOf(); // Current time in milliseconds
+    const expirationTime = payload.exp * 1000;
+    const currentTime = moment().valueOf();
     return currentTime >= expirationTime;
   }
 
   private setSession(payload: DecodedJwtPayload): void {
-    const expiresAt = payload.exp * 1000; // Convert expiration time from seconds to milliseconds
+    const expiresAt = payload.exp * 1000;
     this.localStorage.setItem('expires_at', String(expiresAt));
   }
 
@@ -110,13 +110,8 @@ export class AuthService {
   }
 
   public isLoggedIn(): boolean {
-    // Retrieve 'expires_at' from local storage
     const expiresAtString = this.localStorage.getItem('expires_at');
-    
-    // Convert to number, defaulting to 0 if 'expires_at' is null or undefined
     const expiresAt = expiresAtString ? +expiresAtString : 0;
-    
-    // Compare the current time with the expiration time
     return moment().valueOf() < expiresAt;
   }
   

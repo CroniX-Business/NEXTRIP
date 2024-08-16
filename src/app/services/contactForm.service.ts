@@ -11,14 +11,15 @@ export class ContactFormService {
 
   constructor(private http: HttpClient) {}
 
-  sendContactForm(email: string, subject: string, message: string): Observable<boolean> {
+  public sendContactForm(email: string, subject: string, message: string): Observable<boolean> {
+    return this.sendContactFormPrivate(email, subject, message)
+  }
+
+  private sendContactFormPrivate(email: string, subject: string, message: string): Observable<boolean> {
     return this.http
     .post(`${this.BACKEND_API}/contact`, { email, subject, message })
     .pipe(
       map((response) => {
-        // if (response.status === 200) {
-        //   return true;
-        // }
         console.log(response)
         return true;
       }),
