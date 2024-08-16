@@ -177,6 +177,13 @@ export class MapComponent implements AfterViewInit {
 
           this.directions.interactive = true;
           this.map.addControl(new LoadingIndicatorControl(this.directions));
+
+          this.directions.on('addwaypoint', (e) => {
+            if (e.data && e.data.index !== undefined && e.data.index >= 5) {
+              alert('Maksimalno 5 lokacija');
+              this.directions.removeWaypoint(e.data.index);
+            }
+          });
         });
       }
     } catch (error) {
@@ -240,16 +247,33 @@ export class MapComponent implements AfterViewInit {
       radius: 1600,
     };
 
-    this.generatorService
-      .generateRoute(this.directions.waypointsFeatures, generatorParams)
-      .subscribe({
-        next: (response) => {
-          this.handleTripGenerationSuccess(response);
-        },
-        error: (error) => {
-          console.error('Error generating trip', error);
-        },
-      });
+    if (this.user) {
+      this.generatorService
+        .generateRoute(
+          this.directions.waypointsFeatures,
+          generatorParams,
+          this.user?._id,
+        )
+        .subscribe({
+          next: (response) => {
+            this.updateTokens();
+            this.handleTripGenerationSuccess(response);
+          },
+          error: (error) => {
+            console.error('Error generating trip', error);
+          },
+        });
+    }
+  }
+
+  private updateTokens() {
+    this.getUserInfo();
+    setTimeout(() => {
+      if (this.user) {
+        const newTokenCount = this.user?.tokens;
+        this.generatorService.updateTokens(newTokenCount);
+      }
+    }, 1000);
   }
 
   private handleTripGenerationSuccess(response: Place[]): void {
@@ -284,7 +308,6 @@ export class MapComponent implements AfterViewInit {
 
         const photoReference = place.photos?.[0]?.name.split('/').pop();
 
-        // Construct the image URL using the photo reference and Google Place Photos API
         const imageUrl = photoReference
           ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=60&photo_reference=${photoReference}&key=${environment.GOOGLE_PLACES_API}`
           : `https://picsum.photos/seed/${index + 1}/60/60`;
@@ -364,8 +387,8 @@ export class MapComponent implements AfterViewInit {
         )
         .subscribe({
           next: (success) => {
-            this.toggleModalSave()
-            this.cdr.detectChanges()
+            this.toggleModalSave();
+            this.cdr.detectChanges();
             if (success) {
               console.log('Trip saved successfully!');
             } else {

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Feature, Point } from '@maplibre/maplibre-gl-directions';
 import { GeoJsonProperties } from 'geojson';
@@ -13,14 +13,17 @@ export class GeneratorService {
   private BACKEND_API = environment.BACKEND_API;
 
   placesFromTrips: Place[] = [];
+  private tokensSubject = new BehaviorSubject<number>(0);
+  tokens$ = this.tokensSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
   public generateRoute(
     waypointsFeatures: Feature<Point, GeoJsonProperties>[],
     generatorParams: generatorParams,
+    userId: string,
   ): Observable<Place[]> {
-    return this.generateRoutePrivate(waypointsFeatures, generatorParams);
+    return this.generateRoutePrivate(waypointsFeatures, generatorParams, userId);
   }
 
   public saveRoute(
@@ -43,6 +46,10 @@ export class GeneratorService {
     this.placesFromTrips = places;
   }
 
+  public updateTokens(newTokenCount: number) {
+    this.tokensSubject.next(newTokenCount);
+  }
+
   public removeTripFromDB(
     userId: string,
     placeId: string,
@@ -53,10 +60,12 @@ export class GeneratorService {
   private generateRoutePrivate(
     waypointsFeatures: Feature<Point, GeoJsonProperties>[],
     generatorParams: generatorParams,
+    userId: string,
   ): Observable<Place[]> {
     return this.http.post<Place[]>(`${this.BACKEND_API}/generator`, {
       waypointsFeatures: waypointsFeatures,
       generatorParams: generatorParams,
+      userId: userId
     });
   }
 

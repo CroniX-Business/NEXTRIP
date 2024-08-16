@@ -83,8 +83,18 @@ export class GeneratorService {
   async generateTrip(
     waypoints: Feature<Point, GeoJsonProperties>[],
     generatorParams: TripDto,
+    userId: string,
   ): Promise<Place[]> {
     try {
+      const user = await this.userModel.findById(userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
+
+      if (user.tokens <= 0) {
+        throw new Error('Insufficient tokens');
+      }
+
       const trueKeys = this.getTrueKeys(generatorParams);
 
       const responses = await Promise.all(
@@ -121,9 +131,11 @@ export class GeneratorService {
         lastWaypoint,
       );
 
+      user.tokens -= 1;
+      await user.save();
+
       return sortedPlaces;
     } catch (error) {
-      //this.handleError(error);
       Logger.error(
         'Error fetching nearby places',
         error.message,

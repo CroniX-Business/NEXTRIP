@@ -14,11 +14,13 @@ export class GeneratorController {
     body: {
       waypointsFeatures: Feature<Point, GeoJsonProperties>[];
       generatorParams: TripDto;
+      userId: string;
     },
   ): Promise<Place[]> {
     const result = this.generatorService.generateTrip(
       body.waypointsFeatures,
       body.generatorParams,
+      body.userId,
     );
     return result;
   }

@@ -24,7 +24,7 @@
       <div class="mb-5"><strong>Email:</strong> {{ user.email }}</div>
       <div class="mb-5"><strong>First Name:</strong> {{ user.firstName }}</div>
       <div class="mb-5"><strong>Last Name:</strong> {{ user.lastName }}</div>
-      <div><strong>Tokens:</strong> 5</div>
+      <div><strong>Tokens:</strong> {{ user.tokens }}</div>
     </div>
   </div>
   <div *ngIf="!user">
