@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
 import { GeneratorService } from './generator.service';
 import { Feature, Point } from '@maplibre/maplibre-gl-directions';
 import { GeoJsonProperties } from 'geojson';
@@ -37,5 +37,13 @@ export class GeneratorController {
   @Post('get-trips')
   async getTrips(@Body() body: { userId: string }): Promise<Trip[]> {
     return await this.generatorService.getTrips(body.userId);
+  }
+
+  @Delete('delete/:userId/:tripId')
+  async deleteTrip(
+    @Param('userId') userId: string,
+    @Param('tripId') tripId: string,
+  ): Promise<boolean> {
+    return this.generatorService.removeTrip(userId, tripId);
   }
 }

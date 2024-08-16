@@ -1,5 +1,11 @@
 import { Feature, Point } from '@maplibre/maplibre-gl-directions';
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { GeoJsonProperties } from 'geojson';
 import axios from 'axios';
 import { environment } from 'environments/environment';
@@ -16,6 +22,27 @@ export class GeneratorService {
   defaultRadius: number = 1000;
 
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+
+  async removeTrip(userId: string, tripId: string): Promise<boolean> {
+    const user = await this.userModel.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const tripIndex = user.trips.findIndex(
+      (trip) => trip.tripId.toString() === tripId,
+    );
+
+    if (tripIndex === -1) {
+      throw new NotFoundException('Trip not found');
+    }
+
+    user.trips.splice(tripIndex, 1);
+    await user.save();
+
+    return true;
+  }
 
   async getTrips(userId: string): Promise<Trip[]> {
     const user = await this.userModel.findById(userId).select('trips').exec();

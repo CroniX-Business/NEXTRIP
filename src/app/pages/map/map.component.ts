@@ -77,7 +77,9 @@ export class MapComponent implements AfterViewInit {
   }
 
   toggleModalSave() {
+    console.log(this.showModalSaveTrip);
     this.showModalSaveTrip = !this.showModalSaveTrip;
+    console.log(this.showModalSaveTrip);
   }
 
   myLocation() {
@@ -242,7 +244,6 @@ export class MapComponent implements AfterViewInit {
       .generateRoute(this.directions.waypointsFeatures, generatorParams)
       .subscribe({
         next: (response) => {
-          //console.log('Trip generated successfully', response);
           this.handleTripGenerationSuccess(response);
         },
         error: (error) => {
@@ -363,12 +364,13 @@ export class MapComponent implements AfterViewInit {
         )
         .subscribe({
           next: (success) => {
+            this.toggleModalSave()
+            this.cdr.detectChanges()
             if (success) {
-              alert('Trip saved successfully!');
+              console.log('Trip saved successfully!');
             } else {
-              alert('Failed to save trip.');
+              console.log('Failed to save trip.');
             }
-            this.toggleModalSave();
           },
           error: (err) => {
             console.error('Error saving trip:', err);

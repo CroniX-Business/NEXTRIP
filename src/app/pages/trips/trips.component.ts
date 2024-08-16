@@ -24,6 +24,9 @@ export class TripsComponent {
   trips: Trip[] | null = null;
   places: Place[] | null = null;
 
+  showConfirmationModal = false;
+  tripToRemove: string | null = null;
+
   constructor(
     private generatorService: GeneratorService,
     private authService: AuthService,
@@ -31,6 +34,31 @@ export class TripsComponent {
     private router: Router,
   ) {
     this.getUserInfo();
+  }
+
+  openConfirmationModal(tripId: string) {
+    this.showConfirmationModal = true;
+    this.tripToRemove = tripId;
+  }
+
+  closeConfirmationModal() {
+    this.showConfirmationModal = false;
+    this.tripToRemove = null;
+  }
+
+  removeTrip() {
+    if (this.tripToRemove && this.user) {
+      this.generatorService.removeTripFromDB(this.user._id, this.tripToRemove).subscribe({
+        next: (response) => {
+          console.log('Trip removed successfully:', response);
+          this.loadTrips();
+          this.closeConfirmationModal();
+        },
+        error: (error) => {
+          console.error('Error removing trip:', error);
+        }
+      });
+    }
   }
 
   getUserInfo(): void {
@@ -70,4 +98,18 @@ export class TripsComponent {
       console.error('Trip not found');
     }
   }
+
+  // removeTrip(tripId: string): void {
+  //   if(this.user) {
+  //     this.generatorService.removeTripFromDB(this.user._id, tripId).subscribe({
+  //       next: (response) => {
+  //         console.log('Trip removed successfully:', response);
+  //         this.loadTrips()
+  //       },
+  //       error: (error) => {
+  //         console.error('Error removing trip:', error);
+  //       }
+  //     });
+  //   }
+  // }
 }

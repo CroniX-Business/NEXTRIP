@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Feature, Point } from '@maplibre/maplibre-gl-directions';
 import { GeoJsonProperties } from 'geojson';
@@ -43,6 +43,13 @@ export class GeneratorService {
     this.placesFromTrips = places;
   }
 
+  public removeTripFromDB(
+    userId: string,
+    placeId: string,
+  ): Observable<boolean> {
+    return this.removeTripFromDBPrivate(userId, placeId);
+  }
+
   private generateRoutePrivate(
     waypointsFeatures: Feature<Point, GeoJsonProperties>[],
     generatorParams: generatorParams,
@@ -69,5 +76,14 @@ export class GeneratorService {
     return this.http.post<Trip[]>(`${this.BACKEND_API}/generator/get-trips`, {
       userId,
     });
+  }
+
+  private removeTripFromDBPrivate(
+    userId: string,
+    tripId: string,
+  ): Observable<boolean> {
+    return this.http
+      .delete(`${this.BACKEND_API}/generator/delete/${userId}/${tripId}`)
+      .pipe(map(() => true));
   }
 }

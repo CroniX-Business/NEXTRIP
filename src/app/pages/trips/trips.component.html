@@ -32,10 +32,18 @@
               <td class="px-6 py-4 text-right">
                 <a
                   href="javascript:void(0)"
+                  (click)="openConfirmationModal(trip.tripId)"
+                  class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                >
+                  Remove
+                </a>
+                &nbsp;
+                <a
+                  href="javascript:void(0)"
                   (click)="sendPlaces(trip.tripId)"
                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                 >
-                  Show Trip
+                  Show
                 </a>
               </td>
             </tr>
@@ -46,33 +54,23 @@
   </div>
 </div>
 
-<!-- <div class="p-4 bg-gray-100 min-h-screen">
-  <div class="container mx-auto">
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" class="px-6 py-3">Trip ID</th>
-              <th scope="col" class="px-6 py-3">Time Saved</th>
-              <th scope="col" class="px-6 py-3"><span class="sr-only">Actions</span></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let trip of trips" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600">
-              <td class="px-6 py-4 text-gray-700 dark:text-gray-400">
-                {{ trip.tripName }}
-              </td>
-              <td class="px-6 py-4 text-gray-700 dark:text-gray-400">
-                {{ trip.timeSaved | date:'short' }}
-              </td>
-              <td class="px-6 py-4 text-right">
-                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Show Trip</a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+<div *ngIf="showConfirmationModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="w-80 p-6 bg-white border border-gray-300 rounded-lg shadow-md">
+    <h2 class="text-lg font-semibold">Confirm Action</h2>
+    <p class="mt-2">Are you sure you want to remove this trip?</p>
+    <div class="mt-4 flex justify-end space-x-4">
+      <button
+        (click)="removeTrip()"
+        class="px-4 py-2 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white"
+      >
+        Confirm
+      </button>
+      <button
+        (click)="closeConfirmationModal()"
+        class="px-4 py-2  bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white"
+      >
+        Cancel
+      </button>
     </div>
   </div>
-</div> -->
+</div>
