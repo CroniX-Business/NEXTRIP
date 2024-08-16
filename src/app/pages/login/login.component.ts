@@ -34,7 +34,7 @@ export class LoginComponent {
 
   public constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   public loginForm = new FormGroup({
@@ -50,11 +50,13 @@ export class LoginComponent {
       this.authService
         .login(
           this.loginForm.controls.email.value,
-          this.loginForm.controls.password.value
+          this.loginForm.controls.password.value,
         )
         .subscribe((value) => {
           if (value) {
-            this.router.navigate([`${AppRoutesConfig.routeNames.generator}/${AppRoutesConfig.routeNames.map}`]);
+            this.router.navigate([
+              `${AppRoutesConfig.routeNames.generator}/${AppRoutesConfig.routeNames.map}`,
+            ]);
           } else {
             this.loginMessage = 'Login Failed';
           }

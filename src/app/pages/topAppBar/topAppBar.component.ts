@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AppRoutesConfig } from '../../config/routes.config';
@@ -6,12 +6,7 @@ import { AppRoutesConfig } from '../../config/routes.config';
 @Component({
   selector: 'app-top-app-bar',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-  ],
+  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './topAppBar.component.html',
   styleUrl: './topAppBar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

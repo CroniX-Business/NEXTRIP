@@ -33,7 +33,7 @@ export class ProfileComponent {
   constructor(
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
-    private editUserInfoService: EditUserInfoService
+    private editUserInfoService: EditUserInfoService,
   ) {
     this.getUserInfo();
   }
@@ -78,24 +78,24 @@ export class ProfileComponent {
   }
 
   public onSubmit(): void {
-      if (this.editUserInfoForm.valid && this.user?._id) {
-        this.editUserInfoService
-          .editUserInfo(this.user._id, this.editUserInfoForm.value)
-          .subscribe({
-            next: (success) => {
-              if (success) {
-                this.getUserInfo();
-                console.log('User information updated successfully.');
-              } else {
-                console.error('Failed to update user information.');
-              }
-            },
-            error: (error) => {
-              console.error('Error updating user information:', error);
-            },
-          });
-      } else {
-        console.warn('Form is invalid or user ID is missing.');
-      }
+    if (this.editUserInfoForm.valid && this.user?._id) {
+      this.editUserInfoService
+        .editUserInfo(this.user._id, this.editUserInfoForm.value)
+        .subscribe({
+          next: (success) => {
+            if (success) {
+              this.getUserInfo();
+              console.log('User information updated successfully.');
+            } else {
+              console.error('Failed to update user information.');
+            }
+          },
+          error: (error) => {
+            console.error('Error updating user information:', error);
+          },
+        });
+    } else {
+      console.warn('Form is invalid or user ID is missing.');
+    }
   }
 }

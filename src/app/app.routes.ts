@@ -49,7 +49,7 @@ export const routes: Routes = [
             title: 'Map',
             canActivate: [AuthGuard],
           },
-        ]
+        ],
       },
       {
         path: AppRoutesConfig.routeNames.profile,

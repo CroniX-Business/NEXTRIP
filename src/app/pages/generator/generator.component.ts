@@ -12,7 +12,14 @@ import { AppRoutesConfig } from '../../config/routes.config';
   templateUrl: './generator.component.html',
   styleUrls: ['./generator.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MapComponent, ProfileComponent, SettingsComponent, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [
+    MapComponent,
+    ProfileComponent,
+    SettingsComponent,
+    RouterLink,
+    RouterLinkActive,
+    RouterOutlet,
+  ],
 })
 export class GeneratorComponent {
   public appRoutesConfig = AppRoutesConfig;
@@ -20,7 +27,7 @@ export class GeneratorComponent {
   mapPageRoute: string = `${AppRoutesConfig.routes.generator}/${AppRoutesConfig.routes.map}`;
   profilePageRoute: string = `${AppRoutesConfig.routes.generator}/${AppRoutesConfig.routes.profile}`;
   settingsPageRoute: string = `${AppRoutesConfig.routes.generator}/${AppRoutesConfig.routes.settings}`;
-  
+
   constructor(private authService: AuthService) {}
 
   public LogOut(): void {

@@ -16,7 +16,6 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AppRoutesConfig } from '../../config/routes.config';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -41,7 +40,7 @@ export class RegisterComponent {
 
   public constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   public registerForm = new FormGroup({
@@ -81,7 +80,9 @@ export class RegisterComponent {
         )
         .subscribe((value) => {
           if (value) {
-            this.router.navigate([`${AppRoutesConfig.routeNames.generator}/${AppRoutesConfig.routeNames.map}`]);
+            this.router.navigate([
+              `${AppRoutesConfig.routeNames.generator}/${AppRoutesConfig.routeNames.map}`,
+            ]);
           } else {
             this.registerMessage = 'Login Failed';
           }

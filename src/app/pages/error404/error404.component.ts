@@ -6,18 +6,13 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-error404',
   standalone: true,
-  imports: [
-    CommonModule,
-  ],
+  imports: [CommonModule],
   templateUrl: './error404.component.html',
   styleUrl: './error404.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Error404Component {
-
-  public constructor(
-    private router: Router
-  ) {}
+  public constructor(private router: Router) {}
   onSubmit(): void {
     this.router.navigate([AppRoutesConfig.routes.home]);
   }

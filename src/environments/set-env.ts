@@ -26,25 +26,25 @@ const setEnv = () => {
   });
   // `environment.ts` file structure
   const envConfigFileClient = `export const environment = {
-    BACKEND_API: '${process.env["BACKEND_API"] || ''}',
-    MAP_STYLE_API: '${process.env["MAP_STYLE_API"] || ''}',
-    MAP_STYLE_JSON: '${process.env["MAP_STYLE_JSON"] || ''}',
-    GOOGLE_PLACES_API: '${process.env["GOOGLE_PLACES_API"] || ''}',
+    BACKEND_API: '${process.env['BACKEND_API'] || ''}',
+    MAP_STYLE_API: '${process.env['MAP_STYLE_API'] || ''}',
+    MAP_STYLE_JSON: '${process.env['MAP_STYLE_JSON'] || ''}',
+    GOOGLE_PLACES_API: '${process.env['GOOGLE_PLACES_API'] || ''}',
   };
   `;
 
   const envConfigFileBackend = `export const environment = {
-    JWT_TOKEN: '${process.env["JWT_TOKEN"] || ''}',
-    MONGO_URI: '${process.env["MONGO_URI"] || ''}',
-    GOOGLE_PLACES_API: '${process.env["GOOGLE_PLACES_API"] || ''}',
-    MAILER_USER: '${process.env["MAILER_USER"] || ''}',
-    MAILER_PASS: '${process.env["MAILER_PASS"] || ''}',
+    JWT_TOKEN: '${process.env['JWT_TOKEN'] || ''}',
+    MONGO_URI: '${process.env['MONGO_URI'] || ''}',
+    GOOGLE_PLACES_API: '${process.env['GOOGLE_PLACES_API'] || ''}',
+    MAILER_USER: '${process.env['MAILER_USER'] || ''}',
+    MAILER_PASS: '${process.env['MAILER_PASS'] || ''}',
   };
   `;
   console.log(
     colors.magenta(
-      'The file `environment.ts` will be written with the following content: \n'
-    )
+      'The file `environment.ts` will be written with the following content: \n',
+    ),
   );
   writeFile(ClientSide, envConfigFileClient, (err: string) => {
     if (err) {
@@ -53,8 +53,8 @@ const setEnv = () => {
     } else {
       console.log(
         colors.magenta(
-          `Angular environment.ts file generated correctly at ${ClientSide} \n`
-        )
+          `Angular environment.ts file generated correctly at ${ClientSide} \n`,
+        ),
       );
     }
   });
@@ -65,8 +65,8 @@ const setEnv = () => {
     } else {
       console.log(
         colors.magenta(
-          `NestJS environment.ts file generated correctly at ${BackendSide} \n`
-        )
+          `NestJS environment.ts file generated correctly at ${BackendSide} \n`,
+        ),
       );
     }
   });

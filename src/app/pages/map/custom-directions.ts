@@ -11,7 +11,7 @@ import { MapLibreGlDirectionsWaypointEvent } from '@maplibre/maplibre-gl-directi
 export default class CustomMapLibreGlDirections extends MapLibreGlDirections {
   constructor(
     map: maplibregl.Map,
-    configuration?: Partial<MapLibreGlDirectionsConfiguration>
+    configuration?: Partial<MapLibreGlDirectionsConfiguration>,
   ) {
     super(map, configuration);
   }
@@ -27,7 +27,7 @@ export default class CustomMapLibreGlDirections extends MapLibreGlDirections {
 
     const waypointEvent = new MapLibreGlDirectionsWaypointEvent(
       'setwaypoints',
-      undefined
+      undefined,
     );
     this.fire(waypointEvent);
 

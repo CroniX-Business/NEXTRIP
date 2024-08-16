@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 export class AuthGuard {
   public constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
   private canActivate(): boolean {

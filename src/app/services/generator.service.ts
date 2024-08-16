@@ -18,7 +18,7 @@ export class GeneratorService {
 
   public generateRoute(
     waypointsFeatures: Feature<Point, GeoJsonProperties>[],
-    generatorParams: generatorParams
+    generatorParams: generatorParams,
   ): Observable<Place[]> {
     return this.generateRoutePrivate(waypointsFeatures, generatorParams);
   }
@@ -26,7 +26,7 @@ export class GeneratorService {
   public saveRoute(
     userId: string,
     places: Place[],
-    tripName: string
+    tripName: string,
   ): Observable<boolean> {
     return this.saveRoutePrivate(userId, places, tripName);
   }
@@ -45,7 +45,7 @@ export class GeneratorService {
 
   private generateRoutePrivate(
     waypointsFeatures: Feature<Point, GeoJsonProperties>[],
-    generatorParams: generatorParams
+    generatorParams: generatorParams,
   ): Observable<Place[]> {
     return this.http.post<Place[]>(`${this.BACKEND_API}/generator`, {
       waypointsFeatures: waypointsFeatures,
@@ -56,7 +56,7 @@ export class GeneratorService {
   private saveRoutePrivate(
     userId: string,
     places: Place[],
-    tripName: string
+    tripName: string,
   ): Observable<boolean> {
     return this.http.post<boolean>(`${this.BACKEND_API}/generator/save-route`, {
       userId,
@@ -66,6 +66,8 @@ export class GeneratorService {
   }
 
   private getTripsPrivate(userId: string): Observable<Trip[]> {
-    return this.http.post<Trip[]>(`${this.BACKEND_API}/generator/get-trips`, { userId });
+    return this.http.post<Trip[]>(`${this.BACKEND_API}/generator/get-trips`, {
+      userId,
+    });
   }
 }

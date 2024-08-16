@@ -19,35 +19,47 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private localStorage: LocalstorageService
+    private localStorage: LocalstorageService,
   ) {}
 
   public login(email: string, password: string): Observable<boolean> {
-    return this.http.post<{ token: string }>(`${this.BACKEND_API}/auth/login`, { email, password }).pipe(
-      map((response) => {
-        const tokenPayload = this.validateToken(response.token);
-        this.localStorage.setItem('jwt_token', response.token);
-        return !!tokenPayload;
-      }),
-      catchError((error) => {
-        console.error('Login error:', error);
-        return of(false);
-      })
-    );
+    return this.http
+      .post<{
+        token: string;
+      }>(`${this.BACKEND_API}/auth/login`, { email, password })
+      .pipe(
+        map((response) => {
+          const tokenPayload = this.validateToken(response.token);
+          this.localStorage.setItem('jwt_token', response.token);
+          return !!tokenPayload;
+        }),
+        catchError((error) => {
+          console.error('Login error:', error);
+          return of(false);
+        }),
+      );
   }
 
-  public register(username: string, email: string, password: string): Observable<boolean> {
-    return this.http.post<{ token: string }>(`${this.BACKEND_API}/auth/register`, { username, email, password }).pipe(
-      map((response) => {
-        const tokenPayload = this.validateToken(response.token);
-        this.localStorage.setItem('jwt_token', response.token);
-        return !!tokenPayload;
-      }),
-      catchError((error) => {
-        console.error('Registration error:', error);
-        return of(false);
-      })
-    );
+  public register(
+    username: string,
+    email: string,
+    password: string,
+  ): Observable<boolean> {
+    return this.http
+      .post<{
+        token: string;
+      }>(`${this.BACKEND_API}/auth/register`, { username, email, password })
+      .pipe(
+        map((response) => {
+          const tokenPayload = this.validateToken(response.token);
+          this.localStorage.setItem('jwt_token', response.token);
+          return !!tokenPayload;
+        }),
+        catchError((error) => {
+          console.error('Registration error:', error);
+          return of(false);
+        }),
+      );
   }
 
   public getUserInfo(): Observable<User> {
@@ -64,12 +76,12 @@ export class AuthService {
   private validateToken(token: string): DecodedJwtPayload | null {
     try {
       const payload = this.decodeToken(token);
-  
+
       if (payload && this.hasTokenExpired(payload)) {
         this.logOut();
         return null;
       }
-  
+
       return payload;
     } catch (e) {
       console.error('Error decoding token:', e);
@@ -114,5 +126,4 @@ export class AuthService {
     const expiresAt = expiresAtString ? +expiresAtString : 0;
     return moment().valueOf() < expiresAt;
   }
-  
 }

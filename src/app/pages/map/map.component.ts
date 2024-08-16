@@ -47,7 +47,7 @@ export class MapComponent implements AfterViewInit {
   constructor(
     private generatorService: GeneratorService,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     this.getUserInfo();
     this.places = this.generatorService.getPlacesFromTrip();
@@ -212,7 +212,7 @@ export class MapComponent implements AfterViewInit {
           },
           (error) => {
             reject(`Geolocation error: ${error.message}`);
-          }
+          },
         );
       } else {
         reject('No support for geolocation');
@@ -261,10 +261,10 @@ export class MapComponent implements AfterViewInit {
     const waypoints: [number, number][] = response
       .filter(
         (
-          locationObj
+          locationObj,
         ): locationObj is Place & {
           location: { longitude: number; latitude: number };
-        } => !!locationObj.location
+        } => !!locationObj.location,
       )
       .map((locationObj) => [
         locationObj.location.longitude,
@@ -299,8 +299,8 @@ export class MapComponent implements AfterViewInit {
         const popupContent = `
           <div class="p-4 max-w-xs">
             <strong class="text-lg">${index + 1}. ${
-          place.displayName.text
-        }</strong><br>
+              place.displayName.text
+            }</strong><br>
             <strong>Rating:</strong> ${place.rating} ⭐<br>
             <strong>Address:</strong> ${place.formattedAddress || 'N/A'}<br>
             <strong>Open Now:</strong> ${
@@ -359,7 +359,7 @@ export class MapComponent implements AfterViewInit {
         .saveRoute(
           this.user?._id,
           this.places,
-          this.saveTripNameForm.controls.tripName.value
+          this.saveTripNameForm.controls.tripName.value,
         )
         .subscribe({
           next: (success) => {

@@ -2,12 +2,14 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component
+  Component,
 } from '@angular/core';
 import { GeneratorService } from '../../services/generator.service';
 import { Place, Trip } from '../../models/Generator';
 import { User } from '../../models/User';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { AppRoutesConfig } from '../../config/routes.config';
 
 @Component({
   selector: 'app-trips',
@@ -25,7 +27,8 @@ export class TripsComponent {
   constructor(
     private generatorService: GeneratorService,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router,
   ) {
     this.getUserInfo();
   }
@@ -55,11 +58,14 @@ export class TripsComponent {
   }
 
   sendPlaces(tripId: string): void {
-    const selectedTrip = this.trips?.find(trip => trip.tripId === tripId);
+    const selectedTrip = this.trips?.find((trip) => trip.tripId === tripId);
 
     if (selectedTrip) {
       this.places = selectedTrip.places;
       this.generatorService.setPlacesFromTrip(this.places);
+      this.router.navigate([
+        `${AppRoutesConfig.routeNames.generator}/${AppRoutesConfig.routeNames.map}`,
+      ]);
     } else {
       console.error('Trip not found');
     }
