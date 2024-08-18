@@ -32,12 +32,26 @@ export class MapComponent implements AfterViewInit {
   MAP_STYLE_API: string = environment.MAP_STYLE_API;
   MAP_STYLE_JSON: string = environment.MAP_STYLE_JSON;
 
-  checkboxLabels = ['bar', 'restaurant', 'museum'];
+  checkboxLabels = [
+    'restaurant', // Everyone needs to eat, and finding good restaurants is a common trip priority
+    'museum', // Popular cultural activity, often a key part of sightseeing
+    'art_gallery', // Another cultural highlight, often visited by tourists
+    'park', // A great spot for relaxation and enjoying nature during a trip
+    'amusement_park', // Fun activities, especially if traveling with family
+    'night_club', // Popular for nightlife activities
+    'tourist_attraction', // Covers a broad range of popular destinations
+  ];
 
   generatorParamsForm = new FormGroup({
-    bar: new FormControl(false),
     restaurant: new FormControl(false),
     museum: new FormControl(false),
+    art_gallery: new FormControl(false),
+    park: new FormControl(false),
+    amusement_park: new FormControl(false),
+    night_club: new FormControl(false),
+    tourist_attraction: new FormControl(false),
+    radius: new FormControl(),
+    rating: new FormControl(4.6),
   });
 
   saveTripNameForm = new FormGroup({
@@ -68,6 +82,8 @@ export class MapComponent implements AfterViewInit {
   showModalParams: boolean = false;
   showModalSaveTrip: boolean = false;
 
+  radiusValue: string = '1500';
+
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
   }
@@ -77,9 +93,15 @@ export class MapComponent implements AfterViewInit {
   }
 
   toggleModalSave() {
-    console.log(this.showModalSaveTrip);
     this.showModalSaveTrip = !this.showModalSaveTrip;
-    console.log(this.showModalSaveTrip);
+  }
+
+  changeRadius(event: Event) {
+    this.radiusValue = (event.target as HTMLInputElement).value;
+  }
+
+  formatLabel(label: string): string {
+    return label.replace(/_/g, ' ');
   }
 
   myLocation() {
@@ -240,11 +262,17 @@ export class MapComponent implements AfterViewInit {
   generateTrip(): void {
     const generatorParams: generatorParams = {
       typeOfTrip: {
-        bar: this.generatorParamsForm.controls.bar.value,
         restaurant: this.generatorParamsForm.controls.restaurant.value,
         museum: this.generatorParamsForm.controls.museum.value,
+        art_gallery: this.generatorParamsForm.controls.art_gallery.value,
+        park: this.generatorParamsForm.controls.park.value,
+        amusement_park: this.generatorParamsForm.controls.amusement_park.value,
+        night_club: this.generatorParamsForm.controls.night_club.value,
+        tourist_attraction:
+          this.generatorParamsForm.controls.tourist_attraction.value,
       },
-      radius: 1600,
+      radius: this.generatorParamsForm.controls.radius.value,
+      rating: this.generatorParamsForm.controls.rating.value,
     };
 
     if (this.user) {
@@ -257,6 +285,7 @@ export class MapComponent implements AfterViewInit {
         .subscribe({
           next: (response) => {
             this.updateTokens();
+            console.log(response);
             this.handleTripGenerationSuccess(response);
           },
           error: (error) => {
@@ -280,6 +309,8 @@ export class MapComponent implements AfterViewInit {
     this.places = response;
     this.cdr.markForCheck();
 
+    this.toggleModalParams();
+
     this.directions.clear();
     this.directions.interactive = false;
 
@@ -297,6 +328,10 @@ export class MapComponent implements AfterViewInit {
       ]);
 
     this.setPlaceMarker();
+    this.map.flyTo({
+      center: waypoints[0],
+      zoom: 11,
+    });
     this.directions.setWaypoints(waypoints);
   }
 
@@ -363,14 +398,16 @@ export class MapComponent implements AfterViewInit {
   }
 
   clearTrip(): void {
-    this.directions.clear();
+    if (this.places) {
+      this.directions.clear();
 
-    this.markers.forEach((marker) => marker.remove());
-    this.markers = [];
+      this.markers.forEach((marker) => marker.remove());
+      this.markers = [];
 
-    this.places = [];
+      this.places = [];
 
-    this.directions.interactive = true;
+      this.directions.interactive = true;
+    }
   }
 
   saveTrip(): void {

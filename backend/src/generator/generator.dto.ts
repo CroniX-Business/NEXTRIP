@@ -6,7 +6,8 @@ export interface TripDto {
     restaurant: boolean | null | undefined;
     museum: boolean | null | undefined;
   };
-  radius: number;
+  radius: number | null;
+  rating: number | null;
 }
 
 export interface Place {

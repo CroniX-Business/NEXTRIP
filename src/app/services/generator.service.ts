@@ -23,7 +23,11 @@ export class GeneratorService {
     generatorParams: generatorParams,
     userId: string,
   ): Observable<Place[]> {
-    return this.generateRoutePrivate(waypointsFeatures, generatorParams, userId);
+    return this.generateRoutePrivate(
+      waypointsFeatures,
+      generatorParams,
+      userId,
+    );
   }
 
   public saveRoute(
@@ -65,7 +69,7 @@ export class GeneratorService {
     return this.http.post<Place[]>(`${this.BACKEND_API}/generator`, {
       waypointsFeatures: waypointsFeatures,
       generatorParams: generatorParams,
-      userId: userId
+      userId: userId,
     });
   }
 

@@ -1,10 +1,15 @@
 export interface generatorParams {
   typeOfTrip: {
-    bar: boolean | null | undefined;
     restaurant: boolean | null | undefined;
     museum: boolean | null | undefined;
+    art_gallery: boolean | null | undefined;
+    park: boolean | null | undefined;
+    amusement_park: boolean | null | undefined;
+    night_club: boolean | null | undefined;
+    tourist_attraction: boolean | null | undefined;
   };
-  radius: number;
+  radius: number | null;
+  rating: number | null;
 }
 
 export interface Place {

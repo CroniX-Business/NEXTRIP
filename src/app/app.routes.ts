@@ -8,7 +8,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { GeneratorComponent } from './pages/generator/generator.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { SettingsComponent } from './pages/settings/settings.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MapOverlayComponent } from './pages/mapOverlay/mapOverlay.component';
 import { MapComponent } from './pages/map/map.component';
 import { TripsComponent } from './pages/trips/trips.component';
@@ -58,9 +58,9 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
-        path: AppRoutesConfig.routeNames.settings,
-        component: SettingsComponent,
-        title: 'Settings',
+        path: AppRoutesConfig.routeNames.dashboard,
+        component: DashboardComponent,
+        title: 'Dashboard',
         canActivate: [AuthGuard],
       },
     ],

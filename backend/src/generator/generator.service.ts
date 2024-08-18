@@ -100,7 +100,7 @@ export class GeneratorService {
       const responses = await Promise.all(
         waypoints.map(async (waypoint) => {
           const [longitude, latitude] = this.getCoordinates(waypoint);
-          const radius = generatorParams.radius || this.defaultRadius;
+          const radius = generatorParams.radius;
 
           return radius < 1500
             ? await this.makeSingleApiCall(
@@ -118,7 +118,10 @@ export class GeneratorService {
         }),
       );
 
-      const filteredPlaces = this.filterAndMapPlaces(responses.flat());
+      const filteredPlaces = this.filterAndMapPlaces(
+        generatorParams,
+        responses.flat(),
+      );
 
       const combinedPlaces = this.combinePlaces(
         filteredPlaces,
@@ -235,9 +238,12 @@ export class GeneratorService {
     };
   }
 
-  private filterAndMapPlaces(places: Place[]): Place[] {
+  private filterAndMapPlaces(
+    generatorParams: TripDto,
+    places: Place[],
+  ): Place[] {
     return places
-      .filter((place) => place.rating && place.rating > 4.6)
+      .filter((place) => place.rating && place.rating > generatorParams.rating)
       .map((place) => ({
         ...place,
         displayName: place.displayName,
@@ -282,7 +288,7 @@ export class GeneratorService {
         b.location.latitude,
         b.location.longitude,
       );
-      return distanceB - distanceA; // Sort in descending order of distance
+      return distanceB - distanceA;
     });
   }
 
@@ -292,7 +298,7 @@ export class GeneratorService {
     lat2: number,
     lng2: number,
   ): number {
-    const R = 6371; // Radius of the Earth in kilometers
+    const R = 6371;
     const dLat = this.deg2rad(lat2 - lat1);
     const dLng = this.deg2rad(lng2 - lng1);
     const a =
@@ -302,7 +308,7 @@ export class GeneratorService {
         Math.sin(dLng / 2) *
         Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distance in kilometers
+    return R * c;
   }
 
   private deg2rad(deg: number): number {
