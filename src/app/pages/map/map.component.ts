@@ -511,7 +511,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   exportToGoogleMap(): void {
-    if (this.places) {
+    if (this.places && !this.editMode) {
       const waypoints: [number, number][] = this.places
         .filter(
           (
