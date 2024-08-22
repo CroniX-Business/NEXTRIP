@@ -511,7 +511,11 @@ export class MapComponent implements AfterViewInit {
   }
 
   exportToGoogleMap(): void {
-    if (this.places && !this.editMode) {
+    if (this.places) {
+      if(!this.editMode) {
+        alert("Exit edit mode");
+        return;
+      }
       const waypoints: [number, number][] = this.places
         .filter(
           (
