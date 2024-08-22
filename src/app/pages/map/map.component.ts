@@ -81,6 +81,7 @@ export class MapComponent implements AfterViewInit {
   isCollapsed: boolean = false;
   showModalParams: boolean = false;
   showModalSaveTrip: boolean = false;
+  isTokenModalOpen: boolean = false;
 
   radiusValue: string = '1500';
 
@@ -94,6 +95,10 @@ export class MapComponent implements AfterViewInit {
 
   toggleModalSave() {
     this.showModalSaveTrip = !this.showModalSaveTrip;
+  }
+
+  toggleModalWarning() {
+    this.isTokenModalOpen = !this.isTokenModalOpen;
   }
 
   changeRadius(event: Event) {
@@ -259,7 +264,21 @@ export class MapComponent implements AfterViewInit {
     this.toggleModalSave();
   }
 
+  openModalWarning(): void {
+    this.toggleModalWarning();
+  }
+
+  checkTokens(): boolean {
+    if (this.user && this.user.tokens <= 0) {
+      this.openModalWarning();
+      return true;
+    }
+    return false;
+  }
+
   generateTrip(): void {
+    if (this.checkTokens()) return;
+
     const generatorParams: generatorParams = {
       typeOfTrip: {
         restaurant: this.generatorParamsForm.controls.restaurant.value,
@@ -285,7 +304,7 @@ export class MapComponent implements AfterViewInit {
         .subscribe({
           next: (response) => {
             this.updateTokens();
-            console.log(response);
+            //console.log(response);
             this.handleTripGenerationSuccess(response);
           },
           error: (error) => {
@@ -357,6 +376,12 @@ export class MapComponent implements AfterViewInit {
 
         const popupContent = `
           <div class="p-4 max-w-xs">
+            <button 
+              id="remove-point-${index}"
+              class="absolute left-0 top-0 px-2 py-1 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white transition-transform duration-300 transform hover:scale-95"
+            >
+              Remove Point
+            </button>
             <strong class="text-lg">${index + 1}. ${
               place.displayName.text
             }</strong><br>
@@ -393,6 +418,16 @@ export class MapComponent implements AfterViewInit {
           .addTo(this.map);
 
         this.markers.push(marker);
+
+        popup.on('open', () => {
+          const button = document.getElementById(`remove-point-${index}`);
+          if (button) {
+            button.addEventListener('click', (event) => {
+              event.stopPropagation();
+              this.removePoint(index);
+            });
+          }
+        });
       }
     });
   }
@@ -437,6 +472,49 @@ export class MapComponent implements AfterViewInit {
             alert('An error occurred while saving the trip.');
           },
         });
+    }
+  }
+
+  removePoint(index: number): void {
+    if (this.places) {
+      this.directions.removeWaypoint(index);
+
+      const markerToRemove = this.markers[index];
+      if (markerToRemove) {
+        markerToRemove.remove();
+      }
+
+      this.places.splice(index, 1);
+      this.cdr.detectChanges();
+    }
+  }
+
+  exportToGoogleMap(): void {
+    if (this.places) {
+      const waypoints: [number, number][] = this.places
+        .filter(
+          (
+            locationObj,
+          ): locationObj is Place & {
+            location: { longitude: number; latitude: number };
+          } => !!locationObj.location,
+        )
+        .map((locationObj) => [
+          locationObj.location.longitude,
+          locationObj.location.latitude,
+        ]);
+
+      const origin = waypoints[0];
+      const destination = waypoints[waypoints.length - 1];
+
+      const waypointsStr = waypoints
+        .slice(1, -1)
+        .map((wp) => `${wp[1]},${wp[0]}`)
+        .join('|');
+
+      const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin[1]},${origin[0]}&destination=${destination[1]},${destination[0]}&waypoints=${waypointsStr}`;
+
+      window.open(googleMapsUrl, "_blank");
     }
   }
 }
