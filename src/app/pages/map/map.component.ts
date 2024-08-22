@@ -70,6 +70,11 @@ export class MapComponent implements AfterViewInit {
   @ViewChild('map')
   private mapContainer!: ElementRef<HTMLElement>;
 
+  @ViewChild('modal')
+  private modal!: ElementRef;
+  @ViewChild('modalImage')
+  private modalImage!: ElementRef<HTMLImageElement>;
+
   map!: Map;
   directions!: CustomMapLibreGlDirections;
   initialState: [number, number] = [0, 0];
@@ -101,6 +106,15 @@ export class MapComponent implements AfterViewInit {
 
   toggleModalWarning() {
     this.isTokenModalOpen = !this.isTokenModalOpen;
+  }
+
+  openImageResizeModal(imageUrl: string): void {
+    this.modal.nativeElement.style.display = 'block';
+    this.modalImage.nativeElement.src = imageUrl;
+  }
+
+  closeImageResizeModal(): void {
+    this.modal.nativeElement.style.display = 'none';
   }
 
   changeRadius(event: Event) {
@@ -378,7 +392,6 @@ export class MapComponent implements AfterViewInit {
         el.className = 'marker';
 
         const photoReference = place.photos?.[0]?.name.split('/').pop();
-
         const imageUrl = photoReference
           ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=60&photo_reference=${photoReference}&key=${environment.GOOGLE_PLACES_API}`
           : `https://picsum.photos/seed/${index + 1}/60/60`;
@@ -414,12 +427,15 @@ export class MapComponent implements AfterViewInit {
             }<br>
             <div class="mt-4 flex overflow-x-auto space-x-4">
               ${place.photos
-                ?.map((photo) => {
+                ?.map((photo, photoIndex) => {
                   const photoReference = photo.name.split('/').pop();
                   return `
-                  <img 
-                    src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=150&photo_reference=${photoReference}&key=${environment.GOOGLE_PLACES_API}"
-                    class="w-36 h-24 object-cover rounded-md shadow-sm"
+                  <img
+                    id="image-${index}"
+                    src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=640&photo_reference=${photoReference}&key=${environment.GOOGLE_PLACES_API}"
+                    class="w-36 h-24 object-cover rounded-md shadow-sm cursor-pointer"
+                    data-photo-index="${photoIndex}"
+                    data-place-index="${index}"
                   />`;
                 })
                 .join('')}
@@ -449,6 +465,19 @@ export class MapComponent implements AfterViewInit {
               });
             }
           }
+          // Attach event listeners to images
+          const images = document.querySelectorAll(`#image-${index}`);
+          images.forEach((image) => {
+            image.addEventListener('click', (event) => {
+              const target = event.target as HTMLImageElement;
+              const imageSrc = target.src;
+              console.log(
+                imageSrc
+              );
+              this.openImageResizeModal(imageSrc)
+            });
+          });
+
         });
       }
     });
@@ -512,8 +541,8 @@ export class MapComponent implements AfterViewInit {
 
   exportToGoogleMap(): void {
     if (this.places) {
-      if(!this.editMode) {
-        alert("Exit edit mode");
+      if (!this.editMode) {
+        alert('Exit edit mode');
         return;
       }
       const waypoints: [number, number][] = this.places
