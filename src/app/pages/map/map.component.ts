@@ -33,13 +33,13 @@ export class MapComponent implements AfterViewInit {
   MAP_STYLE_JSON: string = environment.MAP_STYLE_JSON;
 
   checkboxLabels = [
-    'restaurant', // Everyone needs to eat, and finding good restaurants is a common trip priority
-    'museum', // Popular cultural activity, often a key part of sightseeing
-    'art_gallery', // Another cultural highlight, often visited by tourists
-    'park', // A great spot for relaxation and enjoying nature during a trip
-    'amusement_park', // Fun activities, especially if traveling with family
-    'night_club', // Popular for nightlife activities
-    'tourist_attraction', // Covers a broad range of popular destinations
+    'restaurant',
+    'museum',
+    'art_gallery',
+    'park',
+    'amusement_park',
+    'night_club',
+    'tourist_attraction',
   ];
 
   generatorParamsForm = new FormGroup({
@@ -50,7 +50,7 @@ export class MapComponent implements AfterViewInit {
     amusement_park: new FormControl(false),
     night_club: new FormControl(false),
     tourist_attraction: new FormControl(false),
-    radius: new FormControl(),
+    radius: new FormControl(1500),
     rating: new FormControl(4.6),
   });
 
@@ -77,6 +77,8 @@ export class MapComponent implements AfterViewInit {
   user: User | null = null;
   places: Place[] | null = null;
   markers: Marker[] = [];
+
+  editMode: boolean = false;
 
   isCollapsed: boolean = false;
   showModalParams: boolean = false;
@@ -206,11 +208,27 @@ export class MapComponent implements AfterViewInit {
           this.map.addControl(new LoadingIndicatorControl(this.directions));
 
           this.directions.on('addwaypoint', (e) => {
-            if (e.data && e.data.index !== undefined && e.data.index >= 5) {
-              alert('Maksimalno 5 lokacija');
-              this.directions.removeWaypoint(e.data.index);
+            if (e.data && e.data.index !== undefined) {
+              if (e.data.index >= 5) {
+                alert('Max 5 locations');
+                this.directions.removeWaypoint(e.data.index);
+              }
+
+              if (this.editMode) {
+                alert('Cannot add locations in edit mode');
+                this.directions.removeWaypoint(e.data.index);
+              }
             }
           });
+
+          // this.directions.on('removewaypoint', (e) => {
+          //   if (e.data && e.data.index !== undefined) {
+          //     if (this.editMode) {
+          //       console.log(e.data.index)
+          //       this.removePoint(e.data.index)
+          //     }
+          //   }
+          // });
         });
       }
     } catch (error) {
@@ -304,7 +322,6 @@ export class MapComponent implements AfterViewInit {
         .subscribe({
           next: (response) => {
             this.updateTokens();
-            //console.log(response);
             this.handleTripGenerationSuccess(response);
           },
           error: (error) => {
@@ -376,9 +393,9 @@ export class MapComponent implements AfterViewInit {
 
         const popupContent = `
           <div class="p-4 max-w-xs">
-            <button 
+            <button
               id="remove-point-${index}"
-              class="absolute left-0 top-0 px-2 py-1 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white transition-transform duration-300 transform hover:scale-95"
+              class="absolute left-0 top-0 px-2 py-1 bg-slate-200 text-black shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white transition-transform duration-300 transform hover:scale-95"
             >
               Remove Point
             </button>
@@ -422,10 +439,15 @@ export class MapComponent implements AfterViewInit {
         popup.on('open', () => {
           const button = document.getElementById(`remove-point-${index}`);
           if (button) {
-            button.addEventListener('click', (event) => {
-              event.stopPropagation();
-              this.removePoint(index);
-            });
+            if (!this.editMode) {
+              button.classList.add('hidden');
+            } else {
+              button.classList.remove('hidden');
+              button.addEventListener('click', (event) => {
+                event.stopPropagation();
+                this.removePoint(index);
+              });
+            }
           }
         });
       }
@@ -435,6 +457,7 @@ export class MapComponent implements AfterViewInit {
   clearTrip(): void {
     if (this.places) {
       this.directions.clear();
+      this.editMode = false;
 
       this.markers.forEach((marker) => marker.remove());
       this.markers = [];
@@ -477,8 +500,6 @@ export class MapComponent implements AfterViewInit {
 
   removePoint(index: number): void {
     if (this.places) {
-      this.directions.removeWaypoint(index);
-
       const markerToRemove = this.markers[index];
       if (markerToRemove) {
         markerToRemove.remove();
@@ -514,7 +535,12 @@ export class MapComponent implements AfterViewInit {
 
       const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${origin[1]},${origin[0]}&destination=${destination[1]},${destination[0]}&waypoints=${waypointsStr}`;
 
-      window.open(googleMapsUrl, "_blank");
+      window.open(googleMapsUrl, '_blank');
     }
+  }
+
+  toggleEditMode(): void {
+    this.editMode = !this.editMode;
+    this.directions.interactive = !this.directions.interactive;
   }
 }
