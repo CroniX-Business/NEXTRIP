@@ -123,6 +123,8 @@ export class GeneratorService {
         responses.flat(),
       );
 
+      Logger.debug(filteredPlaces);
+
       const combinedPlaces = this.combinePlaces(
         filteredPlaces,
         waypoints.length,
@@ -234,7 +236,7 @@ export class GeneratorService {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': environment.GOOGLE_PLACES_API,
       'X-Goog-FieldMask':
-        'places.displayName,places.formattedAddress,places.rating,places.primaryType,places.location,places.photos,places.currentOpeningHours,places.priceLevel,',
+        'places.displayName,places.formattedAddress,places.rating,places.primaryType,places.location,places.photos,places.currentOpeningHours,places.priceLevel,places.googleMapsUri,places.websiteUri',
     };
   }
 

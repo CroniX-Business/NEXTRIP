@@ -165,6 +165,9 @@
             {{ place.formattedAddress || "Address not available" }}
           </p>
           <p class="text-sm text-gray-400">
+            <a href="{{place.websiteUri ? place.websiteUri : place.googleMapsUri}}" class="hover:cursor-pointer hover:underline hover:text-cyan-400" target="_blank">{{place.displayName.text}}</a>
+          </p>
+          <p class="text-sm text-gray-400">
             <strong>Open Now:</strong>
             {{ place.currentOpeningHours?.openNow ? "Yes" : "No" }}
           </p>

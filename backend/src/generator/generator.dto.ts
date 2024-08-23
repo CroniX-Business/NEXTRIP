@@ -21,6 +21,8 @@ export interface Place {
   };
   primaryType: string;
   rating: number;
+  websiteUri?: string;
+  googleMapsUri: string;
   currentOpeningHours?: {
     openNow: boolean;
     periods: {

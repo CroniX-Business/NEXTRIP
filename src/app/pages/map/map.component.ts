@@ -417,6 +417,7 @@ export class MapComponent implements AfterViewInit {
             }</strong><br>
             <strong>Rating:</strong> ${place.rating} ⭐<br>
             <strong>Address:</strong> ${place.formattedAddress || 'N/A'}<br>
+            <strong>Website:</strong> <a href="${place.websiteUri ? place.websiteUri : place.googleMapsUri}" class="hover:cursor-pointer hover:underline hover:text-cyan-400" target="_blank">${place.displayName.text}</a><br>
             <strong>Open Now:</strong> ${
               place.currentOpeningHours?.openNow ? 'Yes' : 'No'
             }<br>
@@ -471,7 +472,6 @@ export class MapComponent implements AfterViewInit {
             image.addEventListener('click', (event) => {
               const target = event.target as HTMLImageElement;
               const imageSrc = target.src;
-              console.log(imageSrc);
               this.openImageResizeModal(imageSrc);
             });
           });
