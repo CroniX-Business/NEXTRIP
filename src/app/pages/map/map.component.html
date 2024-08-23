@@ -106,19 +106,28 @@
     </button>
 
     <button
+      title="Open in google map "
       *ngIf="places && places.length > 0"
+      [disabled]="editMode"
+      [ngClass]="
+        editMode
+          ? 'disabled:bg-gray-500 cursor-not-allowed'
+          : 'hover:bg-white hover:text-black'
+      "
       (click)="exportToGoogleMap()"
-      class="absolute bottom-6 right-20 px-4 py-2 bg-blue-500 text-white rounded-2xl shadow-md focus:outline-none z-40 hover:bg-white hover:text-black"
+      class="absolute bottom-20 right-6 px-4 py-2 bg-blue-500 text-white rounded-2xl shadow-md focus:outline-none z-40"
     >
-      Open in google map
+      <i class="fa-solid fa-file-export"></i>
     </button>
 
     <button
+      title="Edit trip"
       *ngIf="places && places.length > 0"
+      [ngClass]="editMode ? 'bg-white text-black' : 'bg-blue-500 text-white'"
       (click)="toggleEditMode()"
-      class="absolute bottom-6 left-6 px-4 py-2 bg-blue-500 text-white rounded-2xl shadow-md focus:outline-none z-40 hover:bg-white hover:text-black"
+      class="absolute bottom-32 right-6 px-4 py-2 rounded-2xl shadow-md focus:outline-none z-40 hover:bg-white hover:text-black"
     >
-      Edit
+      <i class="fa-solid fa-pen-to-square"></i>
     </button>
 
     <div class="h-full">

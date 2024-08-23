@@ -465,19 +465,16 @@ export class MapComponent implements AfterViewInit {
               });
             }
           }
-          // Attach event listeners to images
+
           const images = document.querySelectorAll(`#image-${index}`);
           images.forEach((image) => {
             image.addEventListener('click', (event) => {
               const target = event.target as HTMLImageElement;
               const imageSrc = target.src;
-              console.log(
-                imageSrc
-              );
-              this.openImageResizeModal(imageSrc)
+              console.log(imageSrc);
+              this.openImageResizeModal(imageSrc);
             });
           });
-
         });
       }
     });
@@ -541,8 +538,8 @@ export class MapComponent implements AfterViewInit {
 
   exportToGoogleMap(): void {
     if (this.places) {
-      if (!this.editMode) {
-        alert('Exit edit mode');
+      if (this.editMode) {
+        alert('Edit mode is enabled');
         return;
       }
       const waypoints: [number, number][] = this.places
