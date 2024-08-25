@@ -1,3 +1,15 @@
 :host {
   display: block;
 }
+
+section{
+  background-image:url('../../../../public/assets/wallpaper.jpg');
+  background-attachment:fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.rounded-costume-info {
+  border-top-left-radius: 5000px;
+  border-top-right-radius: 5000px;
+}

@@ -1,10 +1,11 @@
 <section class="bg-cyan-600 dark:bg-cyan-700">
   <app-top-app-bar route="home"></app-top-app-bar>
-  <div class="flex flex-col px-6 py-8 mx-auto h-screen lg:py-0 items-center justify-center">
-    <!-- Video Container -->
+  <!-- <div
+    class="flex flex-col px-6 py-8 mx-auto h-screen lg:py-0 items-center justify-center"
+  >
     <div class="w-full max-w-screen-lg">
       <video
-        class="w-full h-auto rounded-lg shadow-lg"
+        class="w-full h-auto rounded-lg shadow-lg transition-transform duration-1000 transform hover:scale-105 hover:shadow-xl"
         preload="metadata"
         src="assets/NEXTRIP_home_video_gen.mp4"
         type="video/mp4"
@@ -14,6 +15,103 @@
       >
         Your browser does not support the video tag.
       </video>
+    </div>
+  </div> -->
+
+  <div
+    class="flex flex-col px-6 py-8 mx-auto min-h-screen lg:py-0 items-center justify-center mt-20"
+  >
+    <div class="w-full max-w-screen-lg">
+      <video
+        class="w-full h-auto rounded-lg shadow-lg transition-transform duration-1000 transform hover:scale-105 hover:shadow-xl"
+        preload="metadata"
+        src="assets/NEXTRIP_home_video_gen.mp4"
+        type="video/mp4"
+        autoplay
+        muted
+        loop
+      >
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div
+      class="py-12 w-full mt-20 rounded-costume-info bg-cyan-700 dark:bg-cyan-900"
+    >
+      <div class="max-w-screen-lg mx-auto text-center px-6">
+        <h2 class="text-3xl font-bold text-white">About Nextrip</h2>
+        <p class="mt-4 text-slate-200">
+          Nextrip is your ultimate travel companion, empowering you to generate
+          trips tailored to your unique preferences. Whether you're seeking
+          adventure, relaxation, or cultural exploration, Nextrip has you
+          covered. Once your trip is generated, you can save it for future
+          reference, export the itinerary directly to Google Maps for seamless
+          navigation, and even make edits on the go. With Nextrip, your travel
+          plans are as flexible and personalized as you are.
+        </p>
+      </div>
+
+      <div class="py-12 w-full">
+        <div
+          class="max-w-screen-lg mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6"
+        >
+          <div class="text-center">
+            <div class="bg-blue-100 p-6 rounded-full inline-block">
+              <svg
+                class="w-12 h-12 text-blue-600"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-xl font-bold text-white">
+              Personalized Trips
+            </h3>
+            <p class="mt-2 text-slate-200">
+              Tailor your journey to match your interests and preferences.
+            </p>
+          </div>
+          <div class="text-center">
+            <div class="bg-blue-100 p-6 rounded-full inline-block">
+              <svg
+                class="w-12 h-12 text-blue-600"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M20 17.17V20h-3.83l-7.12-7.12 3.83-3.83L20 17.17M22 2H2v16h4v4h16V2z"
+                />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-xl font-bold text-white">Real-time Updates</h3>
+            <p class="mt-2 text-slate-200">Change trip after it's generated</p>
+          </div>
+          <div class="text-center">
+            <div class="bg-blue-100 p-6 rounded-full inline-block">
+              <svg
+                class="w-12 h-12 text-blue-600"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <path d="M9 21H7V9H2l10-7 10 7h-5v12h-2V11h-6v10z" />
+              </svg>
+            </div>
+            <h3 class="mt-4 text-xl font-bold text-white">
+              Comprehensive Coverage
+            </h3>
+            <p class="mt-2 text-slate-200">
+              Explore every detail of your destination with our extensive
+              guides.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
