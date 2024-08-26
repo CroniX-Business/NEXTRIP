@@ -1,5 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+} from '@angular/core';
 import { TopAppBarComponent } from '../topAppBar/topAppBar.component';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {
@@ -27,6 +31,8 @@ import { ContactFormService } from '../../services/contactForm.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactComponent {
+  public successSentMessage: string = '';
+
   public contactForm = new FormGroup({
     email: new FormControl('', [
       Validators.required,
@@ -36,26 +42,27 @@ export class ContactComponent {
     message: new FormControl('', Validators.required),
   });
 
-  public constructor(private contactService: ContactFormService) {}
+  public constructor(
+    private contactService: ContactFormService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   onSubmit() {
-    if (
-      this.contactForm.controls.email.value !== null &&
-      this.contactForm.controls.subject.value !== null &&
-      this.contactForm.controls.message.value !== null
-    ) {
+    if (this.contactForm.valid) {
       this.contactService
         .sendContactForm(
-          this.contactForm.controls.email.value,
-          this.contactForm.controls.subject.value,
-          this.contactForm.controls.message.value,
+          this.contactForm.controls.email.value!,
+          this.contactForm.controls.subject.value!,
+          this.contactForm.controls.message.value!,
         )
         .subscribe({
-          next: (response) => {
-            console.log('msg send successfully', response);
+          next: (responseMessage: string) => {
+            this.contactForm.reset();
+            this.successSentMessage = responseMessage;
+            this.cdr.detectChanges();
           },
-          error: (error) => {
-            console.error('Error sending msg', error);
+          error: (error: string) => {
+            this.successSentMessage = error;
           },
         });
     }

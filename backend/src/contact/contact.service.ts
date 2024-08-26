@@ -4,7 +4,7 @@ import { environment } from 'environments/environment';
 
 @Injectable()
 export class ContactService {
-  async sendContactForm(email: string, subject: string, message: string) {
+  async sendContactForm(email: string, subject: string, message: string): Promise<string> {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -22,10 +22,9 @@ export class ContactService {
 
     try {
       await transporter.sendMail(mailOptions);
-      return { message: 'Email sent successfully' };
+      return 'Email sent successfully';
     } catch (error) {
-      console.error('Error sending email:', error);
-      throw new Error('Failed to send email');
+      return `Failed to send email: ${error.message}`;
     }
   }
 }

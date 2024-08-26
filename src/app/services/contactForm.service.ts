@@ -15,25 +15,27 @@ export class ContactFormService {
     email: string,
     subject: string,
     message: string,
-  ): Observable<boolean> {
+  ): Observable<string> {
     return this.sendContactFormPrivate(email, subject, message);
   }
 
-  private sendContactFormPrivate(
+  public sendContactFormPrivate(
     email: string,
     subject: string,
     message: string,
-  ): Observable<boolean> {
+  ): Observable<string> {
     return this.http
-      .post(`${this.BACKEND_API}/contact`, { email, subject, message })
+      .post<string>(
+        `${this.BACKEND_API}/contact`,
+        { email, subject, message },
+        { responseType: 'text' as 'json' },
+      )
       .pipe(
-        map((response) => {
-          console.log(response);
-          return true;
+        map((response: string) => {
+          return response;
         }),
         catchError((error) => {
-          console.error('Login error:', error);
-          return of(false);
+          return of(`Failed to send message: ${error.message}`);
         }),
       );
   }

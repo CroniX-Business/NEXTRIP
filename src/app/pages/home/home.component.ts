@@ -17,4 +17,16 @@ import { TopAppBarComponent } from '../topAppBar/topAppBar.component';
     TopAppBarComponent,
   ],
 })
-export class HomeComponent {}
+export class HomeComponent {
+  onHover(side: string, videoElement: HTMLVideoElement): void {
+    if (side === 'left') {
+      videoElement.classList.add('scale-105', 'shadow-xl', 'skew-y-1');
+    } else if (side === 'right') {
+      videoElement.classList.add('scale-105', 'shadow-xl', '-skew-y-1');
+    }
+  }
+
+  onLeave(videoElement: HTMLVideoElement): void {
+    videoElement.classList.remove('scale-105', 'shadow-xl', 'skew-y-1', '-skew-y-1');
+  }
+}

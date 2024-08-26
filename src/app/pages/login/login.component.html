@@ -4,7 +4,7 @@
   >
     <a
       href="#"
-      class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
+      class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-slate-200"
     >
       <img
         class="w-[300px] h-20 mr-2"
@@ -12,13 +12,13 @@
         alt="logo"
       />
     </a>
-
+<!-- w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 -->
     <div
-      class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+      class="w-full rounded-lg md:mt-0 sm:max-w-md xl:p-0 bg-gray-500 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-20 border"
     >
       <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
         <h1
-          class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
+          class="text-xl font-bold leading-tight tracking-tight md:text-2xl text-slate-200"
         >
           Sign in to your account
         </h1>
@@ -31,14 +31,14 @@
           <div>
             <label
               for="email"
-              class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              class="required block mb-2 text-sm font-medium text-slate-200"
               >Email</label
             >
             <input
               type="email"
               formControlName="email"
               id="email"
-              class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+              class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-slate-200"
               placeholder="name@company.com"
               required=""
             />
@@ -59,7 +59,7 @@
           <div>
             <label
               for="password"
-              class="required block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              class="required block mb-2 text-sm font-medium text-slate-200"
               >Password</label
             >
 
@@ -69,7 +69,7 @@
                 id="password"
                 formControlName="password"
                 placeholder="••••••••"
-                class="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="rounded-none rounded-s-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-slate-200 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 [type]="show ? 'password' : 'text'"
                 aria-label="Password"
                 aria-describedby="toggle-password"
@@ -103,7 +103,7 @@
           </div>
 
           <p
-            class="text-sm font-light text-gray-500 dark:text-gray-400 flex items-center justify-end"
+            class="text-sm font-light text-slate-200 flex items-center justify-end"
           >
             Don’t have an account yet?&nbsp;
             <a
@@ -116,10 +116,10 @@
           <div class="flex flex-col items-center">
             <button
               type="submit"
-              class="h-10 w-52 border rounded-md dark:border-gray-600"
+              class="h-10 w-52 border rounded-md border-gray-600"
               [ngClass]="
                 loginForm.invalid
-                  ? 'bg-gray-700 text-white'
+                  ? 'bg-gray-700 text-slate-200 cursor-not-allowed'
                   : 'bg-cyan-400 text-black'
               "
               [disabled]="loginForm.invalid"

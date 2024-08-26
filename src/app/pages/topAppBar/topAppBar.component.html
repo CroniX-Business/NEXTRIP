@@ -1,7 +1,5 @@
 <nav class="bg-cyan-800 border-gray-200 dark:bg-cyan-900">
-  <div
-    class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
-  >
+  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
     <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
       <img src="assets/NEXTRIP_logo.png" class="h-9 pt-1 w-40" />
     </a>
@@ -9,17 +7,18 @@
     <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
       <button
         type="button"
-        class="dark:text-white text-white dark:hover:text-black bg-cyan-500 hover:bg-white hover:text-cyan-800 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 w-40 text-center dark:bg-cyan-600 dark:hover:bg-white"
+        class="hidden md:block dark:text-white text-white dark:hover:text-black bg-cyan-500 hover:bg-white hover:text-cyan-800 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 w-40 text-center dark:bg-cyan-600 dark:hover:bg-white"
         [routerLink]="[loginPageRoute]"
       >
         Sign in now
       </button>
+
       <button
-        data-collapse-toggle="navbar-cta"
         type="button"
+        (click)="toggleMenu()"
         class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-100 rounded-lg md:hidden hover:bg-cyan-600 focus:outline-none focus:ring-2"
         aria-controls="navbar-cta"
-        aria-expanded="false"
+        [attr.aria-expanded]="isMenuOpen ? 'true' : 'false'"
       >
         <span class="sr-only">Open main menu</span>
         <svg
@@ -39,8 +38,10 @@
         </svg>
       </button>
     </div>
+
     <div
-      class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+      class="items-center justify-between w-full md:flex md:w-auto md:order-1"
+      [ngClass]="{'hidden': !isMenuOpen, 'block': isMenuOpen}"
       id="navbar-cta"
     >
       <ul
@@ -49,26 +50,44 @@
         <li>
           <a
             [routerLink]="[homePageRoute]"
-            [ngClass]="route == 'home' ? 'block py-2 px-3 md:p-0 text-black bg-white rounded md:bg-transparent md:text-cyan-200 md:dark:text-cyan-300' : ''"
-            class="block py-2 px-3 md:p-0 text-white rounded hover:bg-cyan-600 md:hover:bg-transparent md:hover:text-cyan-100 md:dark:hover:text-cyan-300 dark:text-white dark:hover:bg-cyan-100 dark:hover:text-black md:dark:hover:bg-transparent dark:border-gray-700"
-            >Home</a
-          >
+            [ngClass]="
+              route == 'home'
+                ? 'block py-2 px-3 md:p-0 rounded md:bg-transparent text-cyan-200 dark:text-cyan-300'
+                : 'text-white'
+            "
+            class="block py-2 px-3 md:p-0 rounded hover:bg-cyan-600 md:hover:bg-transparent md:hover:text-cyan-100 md:dark:hover:text-cyan-300 dark:text-white dark:hover:bg-cyan-100 dark:hover:text-black md:dark:hover:bg-transparent dark:border-gray-700"
+          >Home</a>
         </li>
         <li>
           <a
             [routerLink]="[generatorPageRoute]"
-            [ngClass]="route == 'generator' ? 'block py-2 px-3 md:p-0 text-black bg-white rounded md:bg-transparent md:text-cyan-200 md:dark:text-cyan-300' : ''"
+            [ngClass]="
+              route == 'generator'
+                ? 'block py-2 px-3 md:p-0 text-black rounded md:bg-transparent md:text-cyan-200 md:dark:text-cyan-300'
+                : ''
+            "
             class="block py-2 px-3 md:p-0 text-white rounded hover:bg-cyan-600 md:hover:bg-transparent md:hover:text-cyan-100 md:dark:hover:text-cyan-300 dark:text-white dark:hover:bg-cyan-100 dark:hover:text-black md:dark:hover:bg-transparent dark:border-gray-700"
-            >Generator</a
-          >
+          >Generator</a>
         </li>
         <li>
           <a
             [routerLink]="[contactPageRoute]"
-            [ngClass]="route == 'contact' ? 'block py-2 px-3 md:p-0 text-black bg-white rounded md:bg-transparent md:text-cyan-200 md:dark:text-cyan-300' : ''"
+            [ngClass]="
+              route == 'contact'
+                ? 'block py-2 px-3 md:p-0 text-black rounded md:bg-transparent md:text-cyan-200 md:dark:text-cyan-300'
+                : ''
+            "
             class="block py-2 px-3 md:p-0 text-white rounded hover:bg-cyan-600 md:hover:bg-transparent md:hover:text-cyan-100 md:dark:hover:text-cyan-300 dark:text-white dark:hover:bg-cyan-100 dark:hover:text-black md:dark:hover:bg-transparent dark:border-gray-700"
-            >Contact</a
+          >Contact</a>
+        </li>
+        <li class="md:hidden">
+          <button
+            type="button"
+            class="block w-full dark:text-white text-white dark:hover:text-black bg-cyan-500 hover:bg-white hover:text-cyan-800 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-cyan-600 dark:hover:bg-white"
+            [routerLink]="[loginPageRoute]"
           >
+            Sign in now
+          </button>
         </li>
       </ul>
     </div>

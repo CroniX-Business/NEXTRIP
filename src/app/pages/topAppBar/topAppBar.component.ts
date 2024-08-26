@@ -12,9 +12,15 @@ import { AppRoutesConfig } from '../../config/routes.config';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TopAppBarComponent {
-  @Input() route: string | undefined;
+  @Input() route: string | undefined = 'home';
   loginPageRoute: string = AppRoutesConfig.routes.login;
   homePageRoute: string = AppRoutesConfig.routes.home;
   generatorPageRoute: string = `${AppRoutesConfig.routes.generator}/${AppRoutesConfig.routes.map}`;
   contactPageRoute: string = AppRoutesConfig.routes.contact;
+
+  isMenuOpen = false;
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 }
