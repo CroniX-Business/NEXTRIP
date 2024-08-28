@@ -75,4 +75,15 @@ export class GeneratorController {
       body.isPublic,
     );
   }
+
+  @Post('update-trip-likes')
+  async updateTripLikes(
+    @Body() body: { userId: string; tripId: string; change: number },
+  ): Promise<boolean> {
+    return await this.generatorService.updateTripLikes(
+      body.userId,
+      body.tripId,
+      body.change,
+    );
+  }
 }

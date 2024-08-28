@@ -1,8 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Place, Trip } from '../../models/Generator';
 import { GeneratorService } from '../../services/generator.service';
 import { Router } from '@angular/router';
@@ -19,7 +16,7 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./publicTrips.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PublicTripsComponent {
+export class PublicTripsComponent{
   public user$ = new BehaviorSubject<User | null>(null);
   public trips$ = new BehaviorSubject<Trip[]>([]);
   public bestTrips$ = new BehaviorSubject<Trip[]>([]);
@@ -51,9 +48,11 @@ export class PublicTripsComponent {
     if (currentUser) {
       const isLiked = this.isLiked(tripId);
       if (isLiked) {
-        //this.updateLikes(tripId, -1);
+        console.log('1')
+        this.updateLikes(currentUser._id, tripId, -1);
       } else {
-        //this.updateLikes(tripId, 1);
+        console.log('2')
+        this.updateLikes(currentUser._id, tripId, 1);
       }
     }
   }
@@ -66,30 +65,15 @@ export class PublicTripsComponent {
     return trip ? trip.likedBy.includes(currentUser?._id || '') : false;
   }
 
-  // updateLikes(tripId: string, change: number): void {
-  //   const updateTripLikes = (trips: Trip[]) => {
-  //     return trips.map((trip) => {
-  //       if (trip.tripId === tripId) {
-  //         return {
-  //           ...trip,
-  //           likes: trip.likes + change,
-  //           likedBy:
-  //             change > 0
-  //               ? [...trip.likedBy, this.user$.getValue()?._id || '']
-  //               : trip.likedBy.filter(
-  //                   (id) => id !== this.user$.getValue()?._id,
-  //                 ),
-  //         };
-  //       }
-  //       return trip;
-  //     });
-  //   };
-
-  //   const trips = this.trips$.getValue();
-  //   this.trips$.next(updateTripLikes(trips));
-  //   this.bestTrips$.next(this.getBestTrips(trips));
-  //   this.allTrips$.next(this.getAllTrips(trips));
-  // }
+  updateLikes(userId: string, tripId: string, change: number): void {
+    this.generatorService.updateTripLikes(userId, tripId, change).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.loadTrips();
+      },
+      error: (err) => console.error('Error fetching trips:', err),
+    });
+  }
 
   getUserInfo() {
     this.authService.getUserInfo().subscribe({

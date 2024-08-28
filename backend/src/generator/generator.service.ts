@@ -1,5 +1,6 @@
 import { Feature, Point } from '@maplibre/maplibre-gl-directions';
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -12,7 +13,7 @@ import axios from 'axios';
 import { environment } from 'environments/environment';
 import { TripDto, Place, Trip } from './generator.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from 'schemas/user.schema';
+import { ITrip, User } from 'schemas/user.schema';
 import { Model, Types } from 'mongoose';
 
 const GOOGLE_PLACES_SEARCH_NEARBY_URL =
@@ -22,7 +23,62 @@ const GOOGLE_PLACES_SEARCH_NEARBY_URL =
 export class GeneratorService {
   defaultRadius: number = 1000;
 
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(ITrip.name) private tripModel: Model<ITrip>,
+  ) {}
+
+  async updateTripLikes(
+    userId: string,
+    tripId: string,
+    change: number,
+  ): Promise<boolean> {
+    try {
+      if (![1, -1].includes(change)) {
+        throw new BadRequestException(
+          'Invalid change value. It must be 1 or -1.',
+        );
+      }
+
+      const userObjectId = new Types.ObjectId(userId);
+      const tripObjectId = new Types.ObjectId(tripId);
+
+      const user = await this.userModel.findOne({
+        'trips.tripId': tripObjectId,
+      }).exec();
+      if (!user) {
+        throw new NotFoundException(`User with trip ID ${tripId} not found`);
+      }
+
+      const tripToUpdate = user.trips.find(trip => trip.tripId.equals(tripObjectId));
+      if (!tripToUpdate) {
+        throw new NotFoundException(`Trip with ID ${tripId} not found in user's trips`);
+      }
+
+      const newLikesCount = tripToUpdate.likes + change;
+      const userHasLiked = tripToUpdate.likedBy.includes(userObjectId);
+
+      if (change === 1 && !userHasLiked) {
+        tripToUpdate.likes = newLikesCount;
+        tripToUpdate.likedBy.push(userObjectId);
+      } else if (change === -1 && userHasLiked) {
+        tripToUpdate.likes = newLikesCount;
+        tripToUpdate.likedBy = tripToUpdate.likedBy.filter(id => !id.equals(userObjectId));
+      } else {
+        return false;
+      }
+
+      await user.save();
+      
+      return true
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Error updating trip likes');
+      }
+    }
+  }
 
   async saveTripPublicStatus(
     userId: string,

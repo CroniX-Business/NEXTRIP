@@ -51,6 +51,7 @@ export class GeneratorService {
   }
 
   public setPlacesFromTrip(places: Place[]) {
+    console.log(places)
     this.placesFromTrips = places;
   }
 
@@ -79,6 +80,14 @@ export class GeneratorService {
     isPublic: boolean,
   ): Observable<boolean> {
     return this.saveTripPublicStatusPrivate(userId, tripId, isPublic);
+  }
+
+  public updateTripLikes(
+    userId: string,
+    tripId: string,
+    change: number,
+  ): Observable<boolean> {
+    return this.updateTripLikesPrivate(userId, tripId, change);
   }
 
   private generateRoutePrivate(
@@ -149,6 +158,23 @@ export class GeneratorService {
           return of(`Failed to send message: ${error.message}`);
         }),
       );
+  }
+
+  private updateTripLikesPrivate(
+    userId: string,
+    tripId: string,
+    change: number,
+  ): Observable<boolean> {
+    return this.http
+      .post<number>(
+        `${this.BACKEND_API}/generator/update-trip-likes`,
+        {
+          userId,
+          tripId,
+          change,
+        },
+      )
+      .pipe(map(() => true));
   }
 
   private saveTripPublicStatusPrivate(

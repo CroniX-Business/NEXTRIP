@@ -4,7 +4,7 @@ import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 import { Place } from 'generator/generator.dto';
 
 @Schema()
-export class Trip {
+export class ITrip {
   @Prop({ type: Types.ObjectId, default: () => new Types.ObjectId() })
   tripId: Types.ObjectId;
 
@@ -30,7 +30,7 @@ export class Trip {
   timeSaved: Date;
 }
 
-export const TripSchema = SchemaFactory.createForClass(Trip);
+export const TripSchema = SchemaFactory.createForClass(ITrip);
 
 @Schema()
 export class User extends Document {
@@ -56,7 +56,7 @@ export class User extends Document {
   tokens: number;
 
   @Prop({ type: [TripSchema], default: [] })
-  trips: Trip[];
+  trips: ITrip[];
 
   async comparePassword(enteredPassword: string): Promise<boolean> {
     return bcrypt.compare(enteredPassword, this.password);

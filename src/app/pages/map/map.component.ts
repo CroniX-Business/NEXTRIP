@@ -1069,6 +1069,7 @@ export class MapComponent implements AfterViewInit {
       this.markers = [];
 
       this.places = [];
+      this.generatorService.setPlacesFromTrip([])
 
       this.directions.interactive = true;
     }
