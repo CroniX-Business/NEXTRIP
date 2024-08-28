@@ -14,7 +14,7 @@ export class GeneratorService {
 
   placesFromTrips: Place[] = [];
   private tokensSubject = new BehaviorSubject<number>(0);
-  tokens$ = this.tokensSubject.asObservable();
+  tokens$_ = this.tokensSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 

@@ -1,4 +1,4 @@
-<div class="flex flex-col lg:flex-row lg:space-x-4 space-y-4 lg:space-y-0">
+<!-- <div class="flex flex-col lg:flex-row lg:space-x-4 space-y-4 lg:space-y-0">
   <div
     [ngClass]="{ 'w-full': isCollapsed, 'lg:w-1/2': !isCollapsed }"
     class="map-container relative p-4 pt-16 border-gray-200 rounded-lg dark:border-gray-700 transition-all duration-300"
@@ -187,6 +187,314 @@
           [ngClass]="{
             'bg-gray-700 text-white cursor-not-allowed': !(places$ | async),
             'bg-blue-500 text-white hover:bg-blue-600': (places$ | async),
+          }"
+          class="absolute bottom-6 right-6 px-4 py-2 rounded-2xl shadow-md focus:outline-none z-40 transition-transform duration-300 transform hover:scale-95"
+        >
+          Save Trip
+          <i class="fa-solid fa-floppy-disk" style="color: #ffffff"></i>
+        </button>
+      </ng-container>
+
+      <ng-template #modalContentSaveTrip>
+        <div
+          class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+        >
+          <div
+            class="w-80 p-6 bg-slate-200 border border-gray-300 rounded-lg shadow-md transition-transform duration-300 transform scale-100"
+          >
+            <button
+              type="button"
+              (click)="toggleModalSave()"
+              class="absolute top-2 right-2 p-2"
+            >
+              <i class="fa-solid fa-x text-gray-800"></i>
+            </button>
+
+            <form
+              [formGroup]="saveTripNameForm"
+              (ngSubmit)="saveTrip()"
+              class="space-y-4 mt-8"
+            >
+              <div>
+                <h1>
+                  Trip name needs to be unique otherwise it will not be saved
+                </h1>
+                <label
+                  for="tripName"
+                  class="block text-gray-700 text-sm font-medium"
+                >
+                  Trip Name:
+                </label>
+                <input
+                  id="tripName"
+                  formControlName="tripName"
+                  type="text"
+                  placeholder="Enter trip name"
+                  class="mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500"
+                />
+              </div>
+              <button
+                type="submit"
+                class="w-full px-4 py-2 bg-cyan-800 text-white rounded-2xl shadow-md focus:outline-none hover:bg-cyan-600 transition-all duration-300"
+              >
+                Save Trip
+              </button>
+            </form>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <button
+      (click)="toggleCollapse()"
+      class="absolute top-20 right-6 px-4 py-2 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white hidden lg:block"
+    >
+      <i
+        [ngClass]="
+          isCollapsed
+            ? 'fa-solid fa-chevron-left '
+            : 'fa-solid fa-chevron-right'
+        "
+      ></i>
+    </button>
+  </div>
+
+  <div
+    *ngIf="isTokenModalOpen"
+    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50"
+  >
+    <div class="bg-white rounded-lg shadow-lg max-w-md mx-auto p-6 relative">
+      <h2 class="text-xl font-semibold mb-4">Warning</h2>
+      <p class="text-gray-700">
+        You have no tokens left. Please acquire more tokens to continue.
+      </p>
+      <div class="mt-6 flex justify-end">
+        <button
+          (click)="openModalWarning()"
+          class="px-4 py-2 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  id="imageResize"
+  class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 overflow-auto flex items-center justify-center"
+  #modal
+>
+  <div class="relative w-full h-full flex items-center justify-center p-4">
+    <span
+      class="absolute top-4 right-4 text-white text-2xl font-bold cursor-pointer"
+      (click)="closeImageResizeModal()"
+      >&times;</span
+    >
+    <img
+      src=""
+      id="modalImage"
+      alt="Modal Image"
+      class="block max-w-full max-h-[80vh] object-contain"
+      #modalImage
+    />
+  </div>
+</div> -->
+
+<div class="flex flex-col lg:flex-row lg:space-x-4 space-y-4 lg:space-y-0">
+  <div
+    [ngClass]="{ 'w-full': isCollapsed, 'lg:w-1/2': !isCollapsed }"
+    class="map-container relative p-4 pt-16 border-gray-200 rounded-lg dark:border-gray-700 transition-all duration-300"
+  >
+    <ng-container *ngIf="!showModalParams; else modalContentForParams">
+      <button
+        (click)="openModalGenerateTrip()"
+        class="absolute top-20 left-6 px-4 py-2 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white transition-transform duration-300 transform hover:scale-95"
+      >
+        Open generator options
+      </button>
+    </ng-container>
+
+    <ng-template #modalContentForParams>
+      <div
+        class="absolute top-20 left-6 w-72 p-6 bg-slate-200 border border-gray-300 rounded-lg shadow-md z-50 transition-transform duration-300 transform scale-100"
+      >
+        <button type="button" (click)="toggleModalParams()" class="float-end">
+          <i class="fa-solid fa-x" style="color: #000000"></i>
+        </button>
+        <form
+          [formGroup]="generatorParamsForm"
+          (ngSubmit)="generateTrip()"
+          class="space-y-4"
+        >
+          <div class="space-y-4">
+            <div *ngFor="let label of checkboxLabels">
+              <div class="flex items-center">
+                <input
+                  type="checkbox"
+                  [formControlName]="label"
+                  id="{{ label }}"
+                  class="mr-2"
+                />
+                <label [for]="label" class="text-gray-700">
+                  {{ formatLabel(label) }}
+                </label>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <label
+                  for="radius"
+                  class="inline-block text-sm font-medium text-black w-24"
+                  >Radius: {{ radiusValue }}</label
+                >
+                <input
+                  formControlName="radius"
+                  id="radius"
+                  type="range"
+                  min="500"
+                  max="3000"
+                  value="1500"
+                  step="500"
+                  (change)="changeRadius($event)"
+                  class="inline-block ms-2 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+                />
+              </div>
+
+              <div class="flex items-center">
+                <label
+                  for="rating"
+                  class="inline-block text-sm font-medium text-black"
+                  >Rating:</label
+                >
+                <input
+                  formControlName="rating"
+                  id="rating"
+                  type="number"
+                  min="1.0"
+                  max="5.0"
+                  value="4.6"
+                  step="0.1"
+                  placeholder="4.6"
+                  class="bg-gray-50 border text-gray-900 text-sm rounded-lg inline-block w-20 p-1 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 ms-2"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="px-4 py-2 bg-cyan-800 text-white rounded-2xl shadow-md focus:outline-none hover:bg-slate-200 hover:text-black transition-all duration-300"
+          >
+            Generate Trip
+          </button>
+          <button
+            type="button"
+            (click)="clearTrip()"
+            class="ms-1 px-4 py-2 bg-cyan-800 text-white rounded-2xl shadow-md focus:outline-none hover:bg-slate-200 hover:text-black transition-all duration-300"
+          >
+            Clear Trip
+          </button>
+        </form>
+      </div>
+    </ng-template>
+
+    <button
+      (click)="myLocation()"
+      class="absolute bottom-6 right-6 px-4 py-2 bg-blue-500 text-white rounded-2xl shadow-md focus:outline-none z-40 hover:bg-white hover:text-black"
+    >
+      <i class="fa-solid fa-location-crosshairs"></i>
+    </button>
+
+    <button
+      title="Open in google map "
+      *ngIf="places && places.length > 0"
+      [disabled]="editMode"
+      [ngClass]="
+        editMode
+          ? 'disabled:bg-gray-500 cursor-not-allowed'
+          : 'hover:bg-white hover:text-black'
+      "
+      (click)="exportToGoogleMap()"
+      class="absolute bottom-20 right-6 px-4 py-2 bg-blue-500 text-white rounded-2xl shadow-md focus:outline-none z-40"
+    >
+      <i class="fa-solid fa-file-export"></i>
+    </button>
+
+    <button
+      title="Edit trip"
+      *ngIf="places && places.length > 0"
+      [ngClass]="editMode ? 'bg-white text-black' : 'bg-blue-500 text-white'"
+      (click)="toggleEditMode()"
+      class="absolute bottom-32 right-6 px-4 py-2 rounded-2xl shadow-md focus:outline-none z-40 hover:bg-white hover:text-black"
+    >
+      <i class="fa-solid fa-pen-to-square"></i>
+    </button>
+
+    <div class="h-full">
+      <div #map class="h-full border-1 rounded-3xl"></div>
+    </div>
+  </div>
+
+  <div
+    class="map-container ps-10 relative p-4 pt-16 border-gray-200 rounded-lg dark:border-gray-700 transition-all duration-300"
+    [ngClass]="{ 'lg:w-1/2': !isCollapsed }"
+  >
+    <div [ngClass]="{ hidden: isCollapsed, 'md:w-full': !isCollapsed }">
+      <h2 class="text-xl font-semibold text-white text-center">Trip Info</h2>
+
+      <div
+        *ngIf="!places || places.length === 0"
+        class="text-center text-slate-200"
+      >
+        <p>No trip generated</p>
+      </div>
+
+      <div
+        *ngIf="places && places.length > 0"
+        class="places-container max-h-[calc(100vh-12rem)] overflow-y-auto p-4"
+      >
+        <div
+          *ngFor="let place of places; let i = index"
+          class="mb-4 p-4 border border-gray-300 rounded-lg shadow-sm"
+        >
+          <h3 class="text-lg font-bold text-slate-200">
+            {{ i + 1 }}. [{{ place.primaryType }}]
+            {{ place.displayName.text }} - {{ place.rating }} ⭐
+          </h3>
+          <p class="text-sm text-gray-400">
+            {{ place.formattedAddress || "Address not available" }}
+          </p>
+          <p class="text-sm text-gray-400">
+            <a
+              href="{{
+                place.websiteUri ? place.websiteUri : place.googleMapsUri
+              }}"
+              class="hover:cursor-pointer hover:underline hover:text-cyan-400"
+              target="_blank"
+              >{{ place.displayName.text }}</a
+            >
+          </p>
+          <p class="text-sm text-gray-400">
+            <strong>Open Now:</strong>
+            {{ place.currentOpeningHours?.openNow ? "Yes" : "No" }}
+          </p>
+          <p class="text-sm text-gray-400">
+            {{ getOpeningHoursDescription(place) }}
+          </p>
+        </div>
+      </div>
+
+      <ng-container *ngIf="!showModalSaveTrip; else modalContentSaveTrip">
+        <button
+          (click)="openModalSaveTrip()"
+          [disabled]="!places || places.length === 0"
+          [ngClass]="{
+            'bg-gray-700 text-white cursor-not-allowed':
+              !places || places.length === 0,
+            'bg-blue-500 text-white hover:bg-blue-600':
+              places && places.length > 0,
           }"
           class="absolute bottom-6 right-6 px-4 py-2 rounded-2xl shadow-md focus:outline-none z-40 transition-transform duration-300 transform hover:scale-95"
         >

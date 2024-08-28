@@ -25,11 +25,15 @@
         <div
           class="mt-2 flex justify-between items-center text-gray-700 dark:text-gray-300"
         >
-          <button
-            (click)="toggleLike(trip.tripId)"
-            class="flex items-center"
-          >
-            <i class="me-1" [ngClass]="isLiked(trip.tripId) ? 'fa-solid fa-heart' : 'fa-regular fa-heart'"></i>
+          <button (click)="toggleLike(trip.tripId)" class="flex items-center">
+            <i
+              class="me-1"
+              [ngClass]="
+                isLiked(trip.tripId)
+                  ? 'fa-solid fa-heart'
+                  : 'fa-regular fa-heart'
+              "
+            ></i>
             <span class="text-xs">{{ trip.likes }} Likes</span>
           </button>
           <a

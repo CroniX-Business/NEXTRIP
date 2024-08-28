@@ -29,8 +29,6 @@ export class PublicTripsComponent {
   isExpandedBest = false;
   isExpandedAll = false;
 
-  likedTrips = new Set<string>();
-
   constructor(
     private authService: AuthService,
     private generatorService: GeneratorService,
@@ -53,10 +51,8 @@ export class PublicTripsComponent {
     if (currentUser) {
       const isLiked = this.isLiked(tripId);
       if (isLiked) {
-        this.likedTrips.delete(tripId);
         //this.updateLikes(tripId, -1);
       } else {
-        this.likedTrips.add(tripId);
         //this.updateLikes(tripId, 1);
       }
     }

@@ -51,7 +51,7 @@ export class GeneratorComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.generatorService.tokens$.subscribe((tokens) => {
+    this.generatorService.tokens$_.subscribe((tokens) => {
       this.tokens$.next(tokens);
     });
   }
