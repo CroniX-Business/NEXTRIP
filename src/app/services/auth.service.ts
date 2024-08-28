@@ -34,6 +34,7 @@ export class AuthService {
           return !!tokenPayload;
         }),
         catchError((error) => {
+          this.logOut();
           console.error('Login error:', error);
           return of(false);
         }),

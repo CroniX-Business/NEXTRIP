@@ -1,9 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/User';
 import {
@@ -18,6 +14,7 @@ import {
   usernameRegex,
 } from '../../common/regex_constants';
 import { EditUserInfoService } from '../../services/editUserInfo.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -28,11 +25,10 @@ import { EditUserInfoService } from '../../services/editUserInfo.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent {
-  user: User | null = null;
+  public user$ = new BehaviorSubject<User | null>(null);
 
   constructor(
     private authService: AuthService,
-    private cdr: ChangeDetectorRef,
     private editUserInfoService: EditUserInfoService,
   ) {
     this.getUserInfo();
@@ -65,11 +61,10 @@ export class ProfileComponent {
     ]),
   });
 
-  getUserInfo(): void {
+  getUserInfo() {
     this.authService.getUserInfo().subscribe({
       next: (user) => {
-        this.user = user;
-        this.cdr.markForCheck();
+        this.user$.next(user);
       },
       error: (error) => {
         console.error('Error fetching user information:', error);
@@ -78,9 +73,11 @@ export class ProfileComponent {
   }
 
   public onSubmit(): void {
-    if (this.editUserInfoForm.valid && this.user?._id) {
+    const currentUser = this.user$.getValue();
+
+    if (this.editUserInfoForm.valid && currentUser?._id) {
       this.editUserInfoService
-        .editUserInfo(this.user._id, this.editUserInfoForm.value)
+        .editUserInfo(currentUser._id, this.editUserInfoForm.value)
         .subscribe({
           next: (success) => {
             if (success) {

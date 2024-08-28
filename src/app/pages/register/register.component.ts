@@ -15,6 +15,7 @@ import { AuthService } from '../../services/auth.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AppRoutesConfig } from '../../config/routes.config';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -35,8 +36,7 @@ export class RegisterComponent {
 
   public show: boolean = true;
   public showRepeat: boolean = true;
-
-  public registerMessage: string = '';
+  public registerMessage$ = new BehaviorSubject<string>('');
 
   public constructor(
     private authService: AuthService,
@@ -84,7 +84,7 @@ export class RegisterComponent {
               `${AppRoutesConfig.routeNames.generator}/${AppRoutesConfig.routeNames.map}`,
             ]);
           } else {
-            this.registerMessage = 'Login Failed';
+            this.registerMessage$.next('Register Failed');
           }
         });
     }

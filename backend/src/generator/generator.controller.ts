@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { GeneratorService } from './generator.service';
 import { Feature, Point } from '@maplibre/maplibre-gl-directions';
 import { GeoJsonProperties } from 'geojson';
@@ -41,11 +41,38 @@ export class GeneratorController {
     return await this.generatorService.getTrips(body.userId);
   }
 
+  @Get('get-public-trips')
+  async getPublicTrips(): Promise<Trip[]> {
+    return await this.generatorService.getPublicTrips();
+  }
+
   @Delete('delete/:userId/:tripId')
   async deleteTrip(
     @Param('userId') userId: string,
     @Param('tripId') tripId: string,
   ): Promise<boolean> {
     return this.generatorService.removeTrip(userId, tripId);
+  }
+
+  @Post('save-trip-comment')
+  async saveTripComment(
+    @Body() body: { userId: string; tripId: string; comment: string },
+  ): Promise<string> {
+    return await this.generatorService.saveTripComment(
+      body.userId,
+      body.tripId,
+      body.comment,
+    );
+  }
+
+  @Post('save-public-status')
+  async saveTripPublicStatus(
+    @Body() body: { userId: string; tripId: string; isPublic: boolean },
+  ): Promise<boolean> {
+    return await this.generatorService.saveTripPublicStatus(
+      body.userId,
+      body.tripId,
+      body.isPublic,
+    );
   }
 }

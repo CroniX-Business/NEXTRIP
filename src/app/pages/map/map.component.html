@@ -106,7 +106,7 @@
 
     <button
       title="Open in google map "
-      *ngIf="places && places.length > 0"
+      *ngIf="places$ | async"
       [disabled]="editMode"
       [ngClass]="
         editMode
@@ -121,7 +121,7 @@
 
     <button
       title="Edit trip"
-      *ngIf="places && places.length > 0"
+      *ngIf="places$ | async"
       [ngClass]="editMode ? 'bg-white text-black' : 'bg-blue-500 text-white'"
       (click)="toggleEditMode()"
       class="absolute bottom-32 right-6 px-4 py-2 rounded-2xl shadow-md focus:outline-none z-40 hover:bg-white hover:text-black"
@@ -141,19 +141,16 @@
     <div [ngClass]="{ hidden: isCollapsed, 'md:w-full': !isCollapsed }">
       <h2 class="text-xl font-semibold text-white text-center">Trip Info</h2>
 
-      <div
-        *ngIf="!places || places.length === 0"
-        class="text-center text-slate-200"
-      >
+      <div *ngIf="!(places$ | async)" class="text-center text-slate-200">
         <p>No trip generated</p>
       </div>
 
       <div
-        *ngIf="places && places.length > 0"
+        *ngIf="places$ | async"
         class="places-container max-h-[calc(100vh-12rem)] overflow-y-auto p-4"
       >
         <div
-          *ngFor="let place of places; let i = index"
+          *ngFor="let place of places$ | async; let i = index"
           class="mb-4 p-4 border border-gray-300 rounded-lg shadow-sm"
         >
           <h3 class="text-lg font-bold text-slate-200">
@@ -164,7 +161,14 @@
             {{ place.formattedAddress || "Address not available" }}
           </p>
           <p class="text-sm text-gray-400">
-            <a href="{{place.websiteUri ? place.websiteUri : place.googleMapsUri}}" class="hover:cursor-pointer hover:underline hover:text-cyan-400" target="_blank">{{place.displayName.text}}</a>
+            <a
+              href="{{
+                place.websiteUri ? place.websiteUri : place.googleMapsUri
+              }}"
+              class="hover:cursor-pointer hover:underline hover:text-cyan-400"
+              target="_blank"
+              >{{ place.displayName.text }}</a
+            >
           </p>
           <p class="text-sm text-gray-400">
             <strong>Open Now:</strong>
@@ -179,12 +183,10 @@
       <ng-container *ngIf="!showModalSaveTrip; else modalContentSaveTrip">
         <button
           (click)="openModalSaveTrip()"
-          [disabled]="!places || places.length === 0"
+          [disabled]="(places$ | async)?.length === 0"
           [ngClass]="{
-            'bg-gray-700 text-white cursor-not-allowed':
-              !places || places.length === 0,
-            'bg-blue-500 text-white hover:bg-blue-600':
-              places && places.length > 0,
+            'bg-gray-700 text-white cursor-not-allowed': !(places$ | async),
+            'bg-blue-500 text-white hover:bg-blue-600': (places$ | async),
           }"
           class="absolute bottom-6 right-6 px-4 py-2 rounded-2xl shadow-md focus:outline-none z-40 transition-transform duration-300 transform hover:scale-95"
         >

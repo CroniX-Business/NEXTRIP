@@ -11,6 +11,7 @@ import { AuthService } from '../../services/auth.service';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AppRoutesConfig } from '../../config/routes.config';
 import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +31,7 @@ export class LoginComponent {
   public appRoutesConfig = AppRoutesConfig;
 
   public show: boolean = true;
-  public loginMessage: string = '';
+  public loginMessage$ = new BehaviorSubject<string>('');
 
   public constructor(
     private authService: AuthService,
@@ -58,7 +59,7 @@ export class LoginComponent {
               `${AppRoutesConfig.routeNames.generator}/${AppRoutesConfig.routeNames.map}`,
             ]);
           } else {
-            this.loginMessage = 'Login Failed';
+            this.loginMessage$.next('Login Failed');
           }
         });
     }

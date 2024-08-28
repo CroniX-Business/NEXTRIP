@@ -54,5 +54,9 @@ export interface Trip {
   tripId: string;
   tripName: string;
   places: Place[];
+  comment: string;
+  public: boolean;
+  likes: number;
+  likedBy: string[];
   timeSaved: Date;
 }

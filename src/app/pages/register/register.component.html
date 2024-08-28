@@ -282,7 +282,7 @@
             >
               Register
             </button>
-            <div class="text-center mt-3 text-red-500" *ngIf="registerMessage !== null">
+            <div class="text-center mt-3 text-red-500" *ngIf="registerMessage$ | async as registerMessage">
               {{ registerMessage }}
             </div>
           </div>

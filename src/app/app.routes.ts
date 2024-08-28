@@ -12,6 +12,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { MapOverlayComponent } from './pages/mapOverlay/mapOverlay.component';
 import { MapComponent } from './pages/map/map.component';
 import { TripsComponent } from './pages/trips/trips.component';
+import { PublicTripsComponent } from './pages/publicTrips/publicTrips.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: AppRoutesConfig.routes.home, pathMatch: 'full' },
@@ -61,6 +62,12 @@ export const routes: Routes = [
         path: AppRoutesConfig.routeNames.dashboard,
         component: DashboardComponent,
         title: 'Dashboard',
+        canActivate: [AuthGuard],
+      },
+      {
+        path: AppRoutesConfig.routeNames.publicTrips,
+        component: PublicTripsComponent,
+        title: 'Public Trips',
         canActivate: [AuthGuard],
       },
     ],

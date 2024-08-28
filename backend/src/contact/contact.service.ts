@@ -4,7 +4,11 @@ import { environment } from 'environments/environment';
 
 @Injectable()
 export class ContactService {
-  async sendContactForm(email: string, subject: string, message: string): Promise<string> {
+  async sendContactForm(
+    email: string,
+    subject: string,
+    message: string,
+  ): Promise<string> {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

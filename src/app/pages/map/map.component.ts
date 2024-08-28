@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  ViewChild,
-  AfterViewInit,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Map, Marker, Popup } from 'maplibre-gl';
 import {
@@ -18,6 +12,7 @@ import CustomMapLibreGlDirections from './custom-directions';
 import { generatorParams, Place } from '../../models/Generator';
 import { User } from '../../models/User';
 import { AuthService } from '../../services/auth.service';
+import { BehaviorSubject } from 'rxjs';
 
 ('../assets/map/images/direction-arrow.png?url');
 
@@ -31,6 +26,23 @@ import { AuthService } from '../../services/auth.service';
 export class MapComponent implements AfterViewInit {
   MAP_STYLE_API: string = environment.MAP_STYLE_API;
   MAP_STYLE_JSON: string = environment.MAP_STYLE_JSON;
+
+  map!: Map;
+  directions!: CustomMapLibreGlDirections;
+  initialState: [number, number] = [0, 0];
+
+  public user$ = new BehaviorSubject<User | null>(null);
+  public places$ = new BehaviorSubject<Place[]>([]);
+  markers: Marker[] = [];
+
+  editMode: boolean = false;
+
+  isCollapsed: boolean = false;
+  showModalParams: boolean = false;
+  showModalSaveTrip: boolean = false;
+  isTokenModalOpen: boolean = false;
+
+  radiusValue: string = '1500';
 
   checkboxLabels = [
     'restaurant',
@@ -61,10 +73,9 @@ export class MapComponent implements AfterViewInit {
   constructor(
     private generatorService: GeneratorService,
     private authService: AuthService,
-    private cdr: ChangeDetectorRef,
   ) {
     this.getUserInfo();
-    this.places = this.generatorService.getPlacesFromTrip();
+    this.places$.next(this.generatorService.getPlacesFromTrip());
   }
 
   @ViewChild('map')
@@ -74,23 +85,6 @@ export class MapComponent implements AfterViewInit {
   private modal!: ElementRef;
   @ViewChild('modalImage')
   private modalImage!: ElementRef<HTMLImageElement>;
-
-  map!: Map;
-  directions!: CustomMapLibreGlDirections;
-  initialState: [number, number] = [0, 0];
-
-  user: User | null = null;
-  places: Place[] | null = null;
-  markers: Marker[] = [];
-
-  editMode: boolean = false;
-
-  isCollapsed: boolean = false;
-  showModalParams: boolean = false;
-  showModalSaveTrip: boolean = false;
-  isTokenModalOpen: boolean = false;
-
-  radiusValue: string = '1500';
 
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
@@ -134,10 +128,10 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
-  getUserInfo(): void {
+  getUserInfo() {
     this.authService.getUserInfo().subscribe({
       next: (user) => {
-        this.user = user;
+        this.user$.next(user);
       },
       error: (error) => {
         console.error('Error fetching user information:', error);
@@ -154,11 +148,12 @@ export class MapComponent implements AfterViewInit {
   }
 
   async ngAfterViewInit() {
+    const places = this.places$.getValue();
     this.mapContainer.nativeElement.classList.add('loader');
     await this.initializeMap();
     setTimeout(() => {
-      if (this.places && this.places.length > 0) {
-        this.handleTripGenerationSuccess(this.places);
+      if (places && places.length > 0) {
+        this.handleTripGenerationSuccess(places);
       }
     }, 1000);
   }
@@ -301,7 +296,8 @@ export class MapComponent implements AfterViewInit {
   }
 
   checkTokens(): boolean {
-    if (this.user && this.user.tokens <= 0) {
+    const currentUser = this.user$.getValue();
+    if (currentUser && currentUser.tokens <= 0) {
       this.openModalWarning();
       return true;
     }
@@ -310,6 +306,8 @@ export class MapComponent implements AfterViewInit {
 
   generateTrip(): void {
     if (this.checkTokens()) return;
+
+    const currentUser = this.user$.getValue();
 
     const generatorParams: generatorParams = {
       typeOfTrip: {
@@ -326,12 +324,12 @@ export class MapComponent implements AfterViewInit {
       rating: this.generatorParamsForm.controls.rating.value,
     };
 
-    if (this.user) {
+    if (currentUser) {
       this.generatorService
         .generateRoute(
           this.directions.waypointsFeatures,
           generatorParams,
-          this.user?._id,
+          currentUser._id,
         )
         .subscribe({
           next: (response) => {
@@ -347,17 +345,17 @@ export class MapComponent implements AfterViewInit {
 
   private updateTokens() {
     this.getUserInfo();
+    const currentUser = this.user$.getValue();
     setTimeout(() => {
-      if (this.user) {
-        const newTokenCount = this.user?.tokens;
+      if (currentUser) {
+        const newTokenCount = currentUser.tokens;
         this.generatorService.updateTokens(newTokenCount);
       }
     }, 1000);
   }
 
   private handleTripGenerationSuccess(response: Place[]): void {
-    this.places = response;
-    this.cdr.markForCheck();
+    this.places$.next(response);
 
     this.toggleModalParams();
 
@@ -386,7 +384,8 @@ export class MapComponent implements AfterViewInit {
   }
 
   setPlaceMarker(): void {
-    this.places?.forEach((place, index) => {
+    const places = this.places$.getValue();
+    places.forEach((place, index) => {
       if (place.location) {
         const el = document.createElement('div');
         el.className = 'marker';
@@ -481,35 +480,37 @@ export class MapComponent implements AfterViewInit {
   }
 
   clearTrip(): void {
-    if (this.places) {
+    const places = this.places$.getValue();
+    if (places) {
       this.directions.clear();
       this.editMode = false;
 
       this.markers.forEach((marker) => marker.remove());
       this.markers = [];
 
-      this.places = [];
+      this.places$.next([]);
 
       this.directions.interactive = true;
     }
   }
 
   saveTrip(): void {
+    const currentUser = this.user$.getValue();
+    const places = this.places$.getValue();
     if (
-      this.places &&
-      this.user &&
+      places &&
+      currentUser &&
       this.saveTripNameForm.controls.tripName.value
     ) {
       this.generatorService
         .saveRoute(
-          this.user?._id,
-          this.places,
+          currentUser._id,
+          places,
           this.saveTripNameForm.controls.tripName.value,
         )
         .subscribe({
           next: (success) => {
             this.toggleModalSave();
-            this.cdr.detectChanges();
             if (success) {
               console.log('Trip saved successfully!');
             } else {
@@ -525,24 +526,25 @@ export class MapComponent implements AfterViewInit {
   }
 
   removePoint(index: number): void {
-    if (this.places) {
+    const places = this.places$.getValue();
+    if (places) {
       const markerToRemove = this.markers[index];
       if (markerToRemove) {
         markerToRemove.remove();
       }
 
-      this.places.splice(index, 1);
-      this.cdr.detectChanges();
+      places.splice(index, 1);
     }
   }
 
   exportToGoogleMap(): void {
-    if (this.places) {
+    const places = this.places$.getValue();
+    if (places) {
       if (this.editMode) {
         alert('Edit mode is enabled');
         return;
       }
-      const waypoints: [number, number][] = this.places
+      const waypoints: [number, number][] = places
         .filter(
           (
             locationObj,

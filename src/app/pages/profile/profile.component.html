@@ -1,7 +1,7 @@
 <div
   class="relative p-4 border-gray-200 rounded-lg dark:border-gray-700 bg-slate-500"
 >
-  <div *ngIf="user">
+  <div *ngIf="user$ | async as user">
     <div class="flex items-center p-4">
       <img
         class="w-40 h-40 rounded object-cover"
@@ -27,7 +27,7 @@
       <div><strong>Tokens:</strong> {{ user.tokens }}</div>
     </div>
   </div>
-  <div *ngIf="!user">
+  <div *ngIf="!(user$ | async)">
     <p>Loading user information...</p>
   </div>
 

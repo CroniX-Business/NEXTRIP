@@ -4,6 +4,35 @@ import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 import { Place } from 'generator/generator.dto';
 
 @Schema()
+export class Trip {
+  @Prop({ type: Types.ObjectId, default: () => new Types.ObjectId() })
+  tripId: Types.ObjectId;
+
+  @Prop({ type: String, required: true })
+  tripName: string;
+
+  @Prop({ type: [MongooseSchema.Types.Mixed] })
+  places: Place[];
+
+  @Prop({ type: String })
+  comment: string;
+
+  @Prop({ type: Boolean, default: false })
+  public: boolean;
+
+  @Prop({ type: Number })
+  likes: number;
+
+  @Prop({ type: [Types.ObjectId], ref: 'User', default: [] })
+  likedBy: Types.ObjectId[];
+
+  @Prop({ type: Date, default: Date.now })
+  timeSaved: Date;
+}
+
+export const TripSchema = SchemaFactory.createForClass(Trip);
+
+@Schema()
 export class User extends Document {
   @Prop({ required: true, default: 'user' })
   role: string;
@@ -26,26 +55,8 @@ export class User extends Document {
   @Prop({ required: true, default: 5 })
   tokens: number;
 
-  @Prop({
-    type: [
-      {
-        tripId: {
-          type: Types.ObjectId,
-          default: () => new Types.ObjectId(),
-        },
-        tripName: { type: String, required: true, unique: true },
-        places: [{ type: MongooseSchema.Types.Mixed }],
-        timeSaved: { type: Date, default: Date.now },
-      },
-    ],
-    default: [],
-  })
-  trips: {
-    tripId: Types.ObjectId;
-    tripName: string;
-    places: Place[];
-    timeSaved: Date;
-  }[];
+  @Prop({ type: [TripSchema], default: [] })
+  trips: Trip[];
 
   async comparePassword(enteredPassword: string): Promise<boolean> {
     return bcrypt.compare(enteredPassword, this.password);
@@ -53,12 +64,6 @@ export class User extends Document {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
-UserSchema.methods.comparePassword = async function (
-  enteredPassword: string,
-): Promise<boolean> {
-  return bcrypt.compare(enteredPassword, this.password);
-};
 
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
@@ -68,3 +73,9 @@ UserSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
+
+UserSchema.methods.comparePassword = async function (
+  enteredPassword: string,
+): Promise<boolean> {
+  return bcrypt.compare(enteredPassword, this.password);
+};

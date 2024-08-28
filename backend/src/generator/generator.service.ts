@@ -3,6 +3,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
@@ -22,6 +23,64 @@ export class GeneratorService {
   defaultRadius: number = 1000;
 
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+
+  async saveTripPublicStatus(
+    userId: string,
+    tripId: string,
+    isPublic: boolean,
+  ): Promise<boolean> {
+    try {
+      const user = await this.userModel.findById(userId);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      const trip = user.trips.find((t) => t.tripId.toString() === tripId);
+      if (!trip) {
+        throw new NotFoundException('Trip not found');
+      }
+
+      trip.public = isPublic;
+      await user.save();
+
+      return true;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Error saving comment');
+      }
+    }
+  }
+
+  async saveTripComment(
+    userId: string,
+    tripId: string,
+    comment: string,
+  ): Promise<string> {
+    try {
+      const user = await this.userModel.findById(userId);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      const trip = user.trips.find((t) => t.tripId.toString() === tripId);
+      if (!trip) {
+        throw new NotFoundException('Trip not found');
+      }
+
+      trip.comment = comment;
+      await user.save();
+
+      return 'Comment saved successfully';
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException('Error saving comment');
+      }
+    }
+  }
 
   async removeTrip(userId: string, tripId: string): Promise<boolean> {
     const user = await this.userModel.findById(userId);
@@ -53,6 +112,18 @@ export class GeneratorService {
     return user.trips;
   }
 
+  async getPublicTrips(): Promise<Trip[]> {
+    const users = await this.userModel.find().exec();
+    const publicTrips: Trip[] = [];
+
+    users.forEach((user) => {
+      const publicUserTrips = user.trips.filter((trip) => trip.public);
+      publicTrips.push(...publicUserTrips);
+    });
+
+    return publicTrips;
+  }
+
   async saveTrip(
     userId: string,
     places: Place[],
@@ -69,6 +140,10 @@ export class GeneratorService {
         tripName,
         places,
         timeSaved: new Date(),
+        comment: '',
+        public: false,
+        likes: 0,
+        likedBy: [],
       };
 
       user.trips.push(newTrip);

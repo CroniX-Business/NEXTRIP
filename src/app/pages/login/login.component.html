@@ -126,7 +126,7 @@
             >
               Login
             </button>
-            <div class="text-center mt-3 text-red-500" *ngIf="loginMessage !== null">
+            <div class="text-center mt-3 text-red-500" *ngIf="loginMessage$ | async as loginMessage">
               {{ loginMessage }}
             </div>
           </div>

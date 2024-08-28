@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   OnInit,
 } from '@angular/core';
@@ -13,6 +12,8 @@ import { AppRoutesConfig } from '../../config/routes.config';
 import { User } from '../../models/User';
 import { GeneratorService } from '../../services/generator.service';
 import { CommonModule } from '@angular/common';
+import { PublicTripsComponent } from '../publicTrips/publicTrips.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-generator',
@@ -25,46 +26,45 @@ import { CommonModule } from '@angular/common';
     MapComponent,
     ProfileComponent,
     DashboardComponent,
+    PublicTripsComponent,
     RouterLink,
     RouterLinkActive,
     RouterOutlet,
   ],
 })
 export class GeneratorComponent implements OnInit {
-  user: User | null = null;
-  tokens: number = 0;
+  public user$ = new BehaviorSubject<User | null>(null);
+  public tokens$ = new BehaviorSubject<number>(0);
 
   public appRoutesConfig = AppRoutesConfig;
 
   mapPageRoute: string = `${AppRoutesConfig.routes.generator}/${AppRoutesConfig.routes.map}`;
   profilePageRoute: string = `${AppRoutesConfig.routes.generator}/${AppRoutesConfig.routes.profile}`;
   adminDashboardPageRoute: string = `${AppRoutesConfig.routes.generator}/${AppRoutesConfig.routes.dashboard}`;
+  publicTripsPageRoute: string = `${AppRoutesConfig.routes.generator}/${AppRoutesConfig.routes.publicTrips}`;
 
   constructor(
     private authService: AuthService,
     private generatorService: GeneratorService,
-    private cdr: ChangeDetectorRef,
   ) {
     this.getUserInfo();
   }
 
   ngOnInit() {
     this.generatorService.tokens$.subscribe((tokens) => {
-      this.tokens = tokens;
-      this.cdr.markForCheck();
+      this.tokens$.next(tokens);
     });
   }
 
   checkAdminRole(): boolean {
-    return this.user?.role === 'admin';
+    return this.user$.getValue()?.role === 'admin';
   }
 
-  getUserInfo(): void {
+  getUserInfo() {
     this.authService.getUserInfo().subscribe({
       next: (user) => {
-        this.user = user;
-        this.tokens = this.user.tokens;
-        this.cdr.markForCheck();
+        this.user$.next(user);
+        this.tokens$.next(user.tokens);
       },
       error: (error) => {
         console.error('Error fetching user information:', error);

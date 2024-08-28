@@ -27,6 +27,11 @@ export class HomeComponent {
   }
 
   onLeave(videoElement: HTMLVideoElement): void {
-    videoElement.classList.remove('scale-105', 'shadow-xl', 'skew-y-1', '-skew-y-1');
+    videoElement.classList.remove(
+      'scale-105',
+      'shadow-xl',
+      'skew-y-1',
+      '-skew-y-1',
+    );
   }
 }

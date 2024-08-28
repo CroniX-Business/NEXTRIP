@@ -116,7 +116,10 @@
           >
             Send message
           </button>
-          <div class="text-center mt-3 text-slate-200" *ngIf="successSentMessage">
+          <div
+            class="text-center mt-3 text-slate-200"
+            *ngIf="successSentMessage$ | async as successSentMessage"
+          >
             {{ successSentMessage }}
           </div>
         </div>

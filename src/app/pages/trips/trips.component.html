@@ -11,25 +11,51 @@
             class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
           >
             <tr>
+              <th scope="col" class="px-6 py-3">Likes</th>
               <th scope="col" class="px-6 py-3">Trip ID</th>
               <th scope="col" class="px-6 py-3">Time Saved</th>
-              <th scope="col" class="px-6 py-3">
-                <span class="sr-only">Actions</span>
-              </th>
+              <th scope="col" class="px-6 py-3 text-right">Action</th>
             </tr>
           </thead>
           <tbody>
             <tr
-              *ngFor="let trip of trips"
+              *ngFor="let trip of trips$ | async"
               class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
             >
+              <td class="px-6 py-4 text-gray-700 dark:text-gray-400">
+                {{ trip.likes }}
+              </td>
               <td class="px-6 py-4 text-gray-700 dark:text-gray-400">
                 {{ trip.tripName }}
               </td>
               <td class="px-6 py-4 text-gray-700 dark:text-gray-400">
-                {{ trip.timeSaved | date : "short" }}
+                {{ trip.timeSaved | date: "short" }}
               </td>
               <td class="px-6 py-4 text-right">
+                <label class="inline-flex items-center cursor-pointer">
+                  <span
+                    class="me-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >Public</span
+                  >
+                  <input
+                    type="checkbox"
+                    (change)="savePublicStatus($event, trip.tripId)"
+                    [checked]="isPublicTrip(trip.tripId)"
+                    class="sr-only peer"
+                  />
+                  <div
+                    class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+                  ></div>
+                </label>
+                &nbsp;
+                <a
+                  href="javascript:void(0)"
+                  (click)="openCommentModal(trip.tripId)"
+                  class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                >
+                  Add comment
+                </a>
+                &nbsp;
                 <a
                   href="javascript:void(0)"
                   (click)="openConfirmationModal(trip.tripId)"
@@ -54,7 +80,10 @@
   </div>
 </div>
 
-<div *ngIf="showConfirmationModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+<div
+  *ngIf="showConfirmationModal"
+  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+>
   <div class="w-80 p-6 bg-white border border-gray-300 rounded-lg shadow-md">
     <h2 class="text-lg font-semibold">Confirm Action</h2>
     <p class="mt-2">Are you sure you want to remove this trip?</p>
@@ -67,10 +96,73 @@
       </button>
       <button
         (click)="closeConfirmationModal()"
-        class="px-4 py-2  bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white"
+        class="px-4 py-2 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white"
       >
         Cancel
       </button>
     </div>
+  </div>
+</div>
+
+<div
+  *ngIf="showCommentModal"
+  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+>
+  <div class="w-80 p-6 bg-white border border-gray-300 rounded-lg shadow-md">
+    <form
+      [formGroup]="commentForm"
+      (ngSubmit)="saveComment()"
+      class="space-y-8"
+    >
+      <div class="sm:col-span-2">
+        <label for="comment" class="block mb-2 text-sm font-medium text-black"
+          >Your comment</label
+        >
+        <textarea
+          id="comment"
+          rows="6"
+          maxlength="200"
+          formControlName="comment"
+          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg shadow-sm border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-600 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          placeholder="Leave a comment..."
+        ></textarea>
+        <div
+          *ngIf="
+            commentForm.controls['comment'].invalid &&
+            commentForm.controls['comment'].touched
+          "
+        >
+          <span
+            class="error text-red-500"
+            *ngIf="commentForm.controls['comment'].errors?.['required']"
+          >
+            Comment is required.
+          </span>
+        </div>
+      </div>
+      <div class="flex justify-end space-x-4">
+        <button
+          type="submit"
+          class="flex items-center justify-center mx-auto focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 w-40 text-center"
+          [ngClass]="
+            commentForm.invalid
+              ? 'bg-gray-700 text-white'
+              : 'bg-cyan-400 text-black'
+          "
+          [disabled]="commentForm.invalid"
+        >
+          Save
+        </button>
+        <button
+          (click)="closeCommentModal()"
+          class="px-4 py-2 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none z-40 hover:bg-cyan-800 hover:text-white"
+        >
+          Cancel
+        </button>
+      </div>
+      <div class="text-center mt-3 text-black" *ngIf="message$ | async as message">
+        {{ message }}
+      </div>
+    </form>
   </div>
 </div>

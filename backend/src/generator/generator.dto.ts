@@ -52,5 +52,8 @@ export interface Trip {
   tripId: Types.ObjectId;
   tripName: string;
   places: Place[];
+  comment: string;
+  public: boolean;
+  likes: number;
   timeSaved: Date;
 }

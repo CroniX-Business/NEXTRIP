@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
 } from '@angular/core';
 import { TopAppBarComponent } from '../topAppBar/topAppBar.component';
@@ -14,6 +13,7 @@ import {
 } from '@angular/forms';
 import { emailRegex } from '../../common/regex_constants';
 import { ContactFormService } from '../../services/contactForm.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-contact',
@@ -31,7 +31,7 @@ import { ContactFormService } from '../../services/contactForm.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactComponent {
-  public successSentMessage: string = '';
+  public successSentMessage$ = new BehaviorSubject<string>('');
 
   public contactForm = new FormGroup({
     email: new FormControl('', [
@@ -42,10 +42,7 @@ export class ContactComponent {
     message: new FormControl('', Validators.required),
   });
 
-  public constructor(
-    private contactService: ContactFormService,
-    private cdr: ChangeDetectorRef,
-  ) {}
+  public constructor(private contactService: ContactFormService) {}
 
   onSubmit() {
     if (this.contactForm.valid) {
@@ -58,11 +55,10 @@ export class ContactComponent {
         .subscribe({
           next: (responseMessage: string) => {
             this.contactForm.reset();
-            this.successSentMessage = responseMessage;
-            this.cdr.detectChanges();
+            this.successSentMessage$.next(responseMessage);
           },
           error: (error: string) => {
-            this.successSentMessage = error;
+            this.successSentMessage$.next(error);
           },
         });
     }
