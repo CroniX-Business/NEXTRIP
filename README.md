@@ -65,7 +65,9 @@ run frontend package.json build script
 
 Run following scripts
 ```bash
-1. nextrip/package.json - start script and run backend/package.json build script then start script
+1. nextrip/package.json - start script 
+2. backend/package.json - build script
+3. backend/package.json - start script
 ```
 
 ## Usage
