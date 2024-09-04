@@ -45,7 +45,7 @@ npm install & cd backend/ && npm install
 Make .env inside src/environments and copy following code and edit for yourself.
 For Help - src/environments/set-env.ts - commented text:
 ```bash
-    JWT_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzX2F0IjoiMzYwMCJ9.qbx3KVNockADTp49Tiv-H5uwMyDsdFgHWV0sECkRuUE
+    JWT_TOKEN=
     BACKEND_API=http://localhost:3000
     MONGO_URI=mongodb+srv://myDatabaseUser:D1fficultP%40ssw0rd@cluster0.example.mongodb.net/?retryWrites=true&w=majority
     MAP_STYLE_API=fc7404e322bd48fc82bc5ea396c601f3

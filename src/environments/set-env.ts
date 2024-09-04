@@ -6,7 +6,7 @@ BACKEND_API = http://localhost:3000  - api for connecting to nestjs with port
 MAP_STYLE_API = fc7404e322bd48fc82bc5ea396c601f3 - api for connecting to mapbox with style
 MAP_STYLE_JSON = https://maps.geoapify.com/v1/styles/positron-blue/style.json - api for connecting to mapbox with style json
 
-JWT_TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzX2F0IjoiMzYwMCJ9.qbx3KVNockADTp49Tiv-H5uwMyDsdFgHWV0sECkRuUE - token for signing
+JWT_TOKEN = token for signing
 MONGO_URI = mongodb+srv://myDatabaseUser:D1fficultP%40ssw0rd@cluster0.example.mongodb.net/?retryWrites=true&w=majority - mongodb uri
 GOOGLE_PLACES_API = google places api
 MAILER_USER = email for sending emails
