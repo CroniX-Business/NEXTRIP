@@ -8,7 +8,6 @@ Nextrip is your ultimate travel companion, empowering you to generate trips tail
 2. [Tech Stack](#tech-stack)
 3. [Installation](#installation)
 4. [Usage](#usage)
-5. [Contributing](#contributing)
 6. [License](#license)
 
 ## Features
