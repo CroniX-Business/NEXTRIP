@@ -11,10 +11,11 @@
             class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
           >
             <tr>
-              <th scope="col" class="px-6 py-3">Likes</th>
-              <th scope="col" class="px-6 py-3">Trip ID</th>
-              <th scope="col" class="px-6 py-3">Time Saved</th>
-              <th scope="col" class="px-6 py-3 text-right">Action</th>
+              <th scope="col" class="px-6 py-3">Lajkovi</th>
+              <th scope="col" class="px-6 py-3">Ime</th>
+              <th scope="col" class="px-6 py-3">Vrijeme spremanja</th>
+              <th scope="col" class="px-6 py-3">Komentar</th>
+              <th scope="col" class="px-6 py-3 text-right">Akcije</th>
             </tr>
           </thead>
           <tbody>
@@ -31,11 +32,14 @@
               <td class="px-6 py-4 text-gray-700 dark:text-gray-400">
                 {{ trip.timeSaved | date: "short" }}
               </td>
+              <td class="px-6 py-4 text-gray-700 dark:text-gray-400">
+                {{ trip.comment }}
+              </td>
               <td class="px-6 py-4 text-right">
                 <label class="inline-flex items-center cursor-pointer">
                   <span
                     class="me-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-                    >Public</span
+                    >Javno</span
                   >
                   <input
                     type="checkbox"
@@ -53,7 +57,7 @@
                   (click)="openCommentModal(trip.tripId)"
                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                 >
-                  Add comment
+                  Dodaj komentar
                 </a>
                 &nbsp;
                 <a
@@ -61,7 +65,7 @@
                   (click)="openConfirmationModal(trip.tripId)"
                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                 >
-                  Remove
+                  Obriši
                 </a>
                 &nbsp;
                 <a
@@ -69,7 +73,7 @@
                   (click)="sendPlaces(trip.tripId)"
                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                 >
-                  Show
+                  Prikaži
                 </a>
               </td>
             </tr>

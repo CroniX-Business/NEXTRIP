@@ -10,29 +10,29 @@
       />
       <div class="ml-4 mb-28">
         <h2 class="text-2xl font-bold">{{ user.username }}</h2>
-        <h3 class="text-lg">role: {{ user.role }}</h3>
+        <h3 class="text-lg">Uloga: {{ user.role }}</h3>
       </div>
       <button
         (click)="toggleForm()"
         class="absolute px-4 py-2 w-30 left-52 top-24 bg-slate-200 text-black rounded-2xl shadow-md focus:outline-none hover:bg-cyan-800 hover:text-white"
       >
-        Edit info
+      Uredi podatke
       </button>
     </div>
     <hr class="border-gray-200" />
     <div class="p-4">
       <div class="mb-5"><strong>Email:</strong> {{ user.email }}</div>
-      <div class="mb-5"><strong>First Name:</strong> {{ user.firstName }}</div>
-      <div class="mb-5"><strong>Last Name:</strong> {{ user.lastName }}</div>
-      <div><strong>Tokens:</strong> {{ user.tokens }}</div>
+      <div class="mb-5"><strong>Ime:</strong> {{ user.firstName }}</div>
+      <div class="mb-5"><strong>Prezime:</strong> {{ user.lastName }}</div>
+      <div><strong>Tokeni:</strong> {{ user.tokens }}</div>
     </div>
   </div>
   <div *ngIf="!(user$ | async)">
-    <p>Loading user information...</p>
+    <p>Učitavanje korisničkih podataka...</p>
   </div>
 
   <div *ngIf="isFormVisible" class="p-6 mt-4 bg-white rounded shadow-lg">
-    <h2 class="mb-4 text-2xl font-bold">Edit user info</h2>
+    <h2 class="mb-4 text-2xl font-bold">Uredi podatke o korisniku</h2>
 
     <form
       [formGroup]="editUserInfoForm"
@@ -42,15 +42,15 @@
       <div>
         <label
           for="username"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Username</label
+          class="block mb-2 text-sm font-medium text-gray-900"
+          >Korisničko ime</label
         >
         <input
           type="text"
           formControlName="username"
           id="username"
           class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-          placeholder="name"
+          placeholder="Korisničko ime"
         />
         <div
           *ngIf="
@@ -76,7 +76,7 @@
       <div>
         <label
           for="email"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          class="block mb-2 text-sm font-medium text-gray-900"
           >Email</label
         >
         <input
@@ -104,8 +104,8 @@
       <div>
         <label
           for="password"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Password</label
+          class="block mb-2 text-sm font-medium text-gray-900"
+          >Lozinka</label
         >
         <div class="flex">
           <input
@@ -143,15 +143,15 @@
       <div>
         <label
           for="firstName"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >First name</label
+          class="block mb-2 text-sm font-medium text-gray-900"
+          >Ime</label
         >
         <input
           type="text"
           formControlName="firstName"
           id="firstName"
           class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-          placeholder="First name"
+          placeholder="Ime"
         />
         <div
           *ngIf="
@@ -171,15 +171,15 @@
       <div>
         <label
           for="lastName"
-          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >Last name</label
+          class="block mb-2 text-sm font-medium text-gray-900"
+          >Prezime</label
         >
         <input
           type="text"
           formControlName="lastName"
           id="lastName"
           class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-          placeholder="Last name"
+          placeholder="Prezime"
         />
         <div
           *ngIf="
@@ -202,7 +202,7 @@
           class="h-10 w-52 border rounded-md dark:border-gray-600"
           [disabled]="editUserInfoForm.invalid"
         >
-          Submit changes
+        Pošaljite promjene
         </button>
       </div>
     </form>

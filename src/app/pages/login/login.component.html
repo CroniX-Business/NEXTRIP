@@ -12,7 +12,6 @@
         alt="logo"
       />
     </a>
-<!-- w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700 -->
     <div
       class="w-full rounded-lg md:mt-0 sm:max-w-md xl:p-0 bg-gray-500 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-20 border"
     >
@@ -20,7 +19,7 @@
         <h1
           class="text-xl font-bold leading-tight tracking-tight md:text-2xl text-slate-200"
         >
-          Sign in to your account
+        Prijavite se na svoj račun
         </h1>
 
         <form
@@ -60,7 +59,7 @@
             <label
               for="password"
               class="required block mb-2 text-sm font-medium text-slate-200"
-              >Password</label
+              >Lozinka</label
             >
 
             <div class="flex">
@@ -105,11 +104,11 @@
           <p
             class="text-sm font-light text-slate-200 flex items-center justify-end"
           >
-            Don’t have an account yet?&nbsp;
+          Još nemate račun?&nbsp;
             <a
               [routerLink]="appRoutesConfig.routes.register"
               class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-              >Sign up</a
+              >Registrirajte se</a
             >
           </p>
 
@@ -124,7 +123,7 @@
               "
               [disabled]="loginForm.invalid"
             >
-              Login
+              Prijava
             </button>
             <div class="text-center mt-3 text-red-500" *ngIf="loginMessage$ | async as loginMessage">
               {{ loginMessage }}

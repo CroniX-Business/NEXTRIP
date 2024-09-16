@@ -5,7 +5,7 @@
   type="button"
   class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
 >
-  <span class="sr-only">Open sidebar</span>
+  <span class="sr-only">Otvori bočnu traku</span>
   <svg
     class="w-6 h-6"
     aria-hidden="true"
@@ -29,7 +29,7 @@
   <div class="h-full px-3 py-4 overflow-y-auto bg-cyan-700 dark:bg-cyan-900">
     <a href="#" class="flex items-center ps-2.5 mb-5">
       <img src="assets/NEXTRIP_logo.png" class="h-9 me-1 sm:h-9" />
-      <h1 class="text-slate-200">{{tokens$ | async | json}} tokens</h1>
+      <h1 class="text-slate-200">{{tokens$ | async | json}} tokena</h1>
     </a>
     <ul class="space-y-2 font-medium">
       <li>
@@ -68,7 +68,7 @@
               d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
             />
           </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap">Profile</span>
+          <span class="flex-1 ms-3 whitespace-nowrap">Profil</span>
         </a>
       </li>
       <li>
@@ -87,7 +87,7 @@
               d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
             />
           </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap">Public Trips</span>
+          <span class="flex-1 ms-3 whitespace-nowrap">Javna Putovanja</span>
         </a>
       </li>
       <li *ngIf="checkAdminRole()">
@@ -128,7 +128,7 @@
             d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"
           />
         </svg>
-        <span class="flex-1 ms-3 whitespace-nowrap">Log out</span>
+        <span class="flex-1 ms-3 whitespace-nowrap">Odjava</span>
       </a>
     </div>
   </div>

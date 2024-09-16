@@ -254,8 +254,6 @@ export class GeneratorService {
         responses.flat(),
       );
 
-      Logger.debug(filteredPlaces);
-
       const combinedPlaces = this.combinePlaces(
         filteredPlaces,
         waypoints.length,
