@@ -1,21 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AppRoutesConfig } from '../../config/routes.config';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { MapComponent } from '../map/map.component';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
-    selector: 'app-map-overlay',
-    imports: [
-        CommonModule,
-        RouterLink,
-        RouterLinkActive,
-        RouterOutlet,
-        MapComponent,
-    ],
-    templateUrl: './mapOverlay.component.html',
-    styleUrl: './mapOverlay.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-map-overlay',
+  imports: [CommonModule, RouterLink, RouterOutlet],
+  templateUrl: './mapOverlay.component.html',
+  styleUrl: './mapOverlay.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapOverlayComponent {
   public appRoutesConfig = AppRoutesConfig;

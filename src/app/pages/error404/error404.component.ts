@@ -4,11 +4,11 @@ import { AppRoutesConfig } from '../../config/routes.config';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-error404',
-    imports: [CommonModule],
-    templateUrl: './error404.component.html',
-    styleUrl: './error404.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-error404',
+  imports: [CommonModule],
+  templateUrl: './error404.component.html',
+  styleUrl: './error404.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Error404Component {
   public constructor(private router: Router) {}

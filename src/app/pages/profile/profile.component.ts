@@ -17,11 +17,11 @@ import { EditUserInfoService } from '../../services/editUserInfo.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-    selector: 'app-profile',
-    imports: [CommonModule, ReactiveFormsModule],
-    templateUrl: './profile.component.html',
-    styleUrls: ['./profile.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-profile',
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent {
   public user$ = new BehaviorSubject<User | null>(null);

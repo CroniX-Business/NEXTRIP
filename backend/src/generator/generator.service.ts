@@ -43,16 +43,22 @@ export class GeneratorService {
       const userObjectId = new Types.ObjectId(userId);
       const tripObjectId = new Types.ObjectId(tripId);
 
-      const user = await this.userModel.findOne({
-        'trips.tripId': tripObjectId,
-      }).exec();
+      const user = await this.userModel
+        .findOne({
+          'trips.tripId': tripObjectId,
+        })
+        .exec();
       if (!user) {
         throw new NotFoundException(`User with trip ID ${tripId} not found`);
       }
 
-      const tripToUpdate = user.trips.find(trip => trip.tripId.equals(tripObjectId));
+      const tripToUpdate = user.trips.find((trip) =>
+        trip.tripId.equals(tripObjectId),
+      );
       if (!tripToUpdate) {
-        throw new NotFoundException(`Trip with ID ${tripId} not found in user's trips`);
+        throw new NotFoundException(
+          `Trip with ID ${tripId} not found in user's trips`,
+        );
       }
 
       const newLikesCount = tripToUpdate.likes + change;
@@ -63,14 +69,16 @@ export class GeneratorService {
         tripToUpdate.likedBy.push(userObjectId);
       } else if (change === -1 && userHasLiked) {
         tripToUpdate.likes = newLikesCount;
-        tripToUpdate.likedBy = tripToUpdate.likedBy.filter(id => !id.equals(userObjectId));
+        tripToUpdate.likedBy = tripToUpdate.likedBy.filter(
+          (id) => !id.equals(userObjectId),
+        );
       } else {
         return false;
       }
 
       await user.save();
-      
-      return true
+
+      return true;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;

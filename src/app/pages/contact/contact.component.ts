@@ -1,10 +1,6 @@
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TopAppBarComponent } from '../topAppBar/topAppBar.component';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import {
   FormControl,
   FormGroup,
@@ -16,18 +12,11 @@ import { ContactFormService } from '../../services/contactForm.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-    selector: 'app-contact',
-    imports: [
-        CommonModule,
-        RouterLink,
-        RouterLinkActive,
-        RouterOutlet,
-        TopAppBarComponent,
-        ReactiveFormsModule,
-    ],
-    templateUrl: './contact.component.html',
-    styleUrl: './contact.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-contact',
+  imports: [CommonModule, TopAppBarComponent, ReactiveFormsModule],
+  templateUrl: './contact.component.html',
+  styleUrl: './contact.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContactComponent {
   public successSentMessage$ = new BehaviorSubject<string>('');

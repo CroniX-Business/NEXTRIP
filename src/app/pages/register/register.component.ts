@@ -12,23 +12,16 @@ import {
   emailRegex,
 } from '../../common/regex_constants';
 import { AuthService } from '../../services/auth.service';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AppRoutesConfig } from '../../config/routes.config';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-    selector: 'app-register',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        RouterLink,
-        RouterLinkActive,
-        RouterOutlet,
-    ],
-    templateUrl: './register.component.html',
-    styleUrl: './register.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-register',
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterComponent {
   public appRoutesConfig = AppRoutesConfig;

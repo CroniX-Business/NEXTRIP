@@ -6,7 +6,10 @@ import { ITrip, TripSchema, User, UserSchema } from 'schemas/user.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }, { name: ITrip.name, schema: TripSchema }]),
+    MongooseModule.forFeature([
+      { name: User.name, schema: UserSchema },
+      { name: ITrip.name, schema: TripSchema },
+    ]),
   ],
   controllers: [GeneratorController],
   providers: [GeneratorService],

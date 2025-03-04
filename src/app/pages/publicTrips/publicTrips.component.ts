@@ -9,13 +9,13 @@ import { AuthService } from '../../services/auth.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-    selector: 'app-public-trips',
-    imports: [CommonModule],
-    templateUrl: './publicTrips.component.html',
-    styleUrls: ['./publicTrips.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-public-trips',
+  imports: [CommonModule],
+  templateUrl: './publicTrips.component.html',
+  styleUrls: ['./publicTrips.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PublicTripsComponent{
+export class PublicTripsComponent {
   public user$ = new BehaviorSubject<User | null>(null);
   public trips$ = new BehaviorSubject<Trip[]>([]);
   public bestTrips$ = new BehaviorSubject<Trip[]>([]);
@@ -47,10 +47,10 @@ export class PublicTripsComponent{
     if (currentUser) {
       const isLiked = this.isLiked(tripId);
       if (isLiked) {
-        console.log('1')
+        console.log('1');
         this.updateLikes(currentUser._id, tripId, -1);
       } else {
-        console.log('2')
+        console.log('2');
         this.updateLikes(currentUser._id, tripId, 1);
       }
     }

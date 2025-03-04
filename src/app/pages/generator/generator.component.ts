@@ -1,35 +1,18 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { MapComponent } from '../map/map.component';
-import { ProfileComponent } from '../profile/profile.component';
-import { DashboardComponent } from '../dashboard/dashboard.component';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { AppRoutesConfig } from '../../config/routes.config';
 import { User } from '../../models/User';
 import { GeneratorService } from '../../services/generator.service';
 import { CommonModule } from '@angular/common';
-import { PublicTripsComponent } from '../publicTrips/publicTrips.component';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-    selector: 'app-generator',
-    templateUrl: './generator.component.html',
-    styleUrls: ['./generator.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        CommonModule,
-        MapComponent,
-        ProfileComponent,
-        DashboardComponent,
-        PublicTripsComponent,
-        RouterLink,
-        RouterLinkActive,
-        RouterOutlet,
-    ]
+  selector: 'app-generator',
+  templateUrl: './generator.component.html',
+  styleUrls: ['./generator.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, RouterLink, RouterOutlet],
 })
 export class GeneratorComponent implements OnInit {
   public user$ = new BehaviorSubject<User | null>(null);

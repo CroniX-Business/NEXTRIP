@@ -8,23 +8,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AppRoutesConfig } from '../../config/routes.config';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-    selector: 'app-login',
-    imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        RouterLink,
-        RouterLinkActive,
-        RouterOutlet,
-    ],
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-login',
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
   public appRoutesConfig = AppRoutesConfig;

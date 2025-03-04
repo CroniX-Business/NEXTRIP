@@ -51,7 +51,7 @@ export class GeneratorService {
   }
 
   public setPlacesFromTrip(places: Place[]) {
-    console.log(places)
+    console.log(places);
     this.placesFromTrips = places;
   }
 
@@ -166,14 +166,11 @@ export class GeneratorService {
     change: number,
   ): Observable<boolean> {
     return this.http
-      .post<number>(
-        `${this.BACKEND_API}/generator/update-trip-likes`,
-        {
-          userId,
-          tripId,
-          change,
-        },
-      )
+      .post<number>(`${this.BACKEND_API}/generator/update-trip-likes`, {
+        userId,
+        tripId,
+        change,
+      })
       .pipe(map(() => true));
   }
 
