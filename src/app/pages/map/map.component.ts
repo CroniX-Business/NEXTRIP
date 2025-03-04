@@ -22,11 +22,10 @@ import { AuthService } from '../../services/auth.service';
 ('../assets/map/images/direction-arrow.png?url');
 
 @Component({
-  selector: 'app-map',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css'],
+    selector: 'app-map',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './map.component.html',
+    styleUrls: ['./map.component.css']
 })
 export class MapComponent implements AfterViewInit {
   MAP_STYLE_API: string = environment.MAP_STYLE_API;

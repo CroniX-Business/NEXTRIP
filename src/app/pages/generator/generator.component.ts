@@ -16,21 +16,20 @@ import { PublicTripsComponent } from '../publicTrips/publicTrips.component';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-generator',
-  standalone: true,
-  templateUrl: './generator.component.html',
-  styleUrls: ['./generator.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    MapComponent,
-    ProfileComponent,
-    DashboardComponent,
-    PublicTripsComponent,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-  ],
+    selector: 'app-generator',
+    templateUrl: './generator.component.html',
+    styleUrls: ['./generator.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        CommonModule,
+        MapComponent,
+        ProfileComponent,
+        DashboardComponent,
+        PublicTripsComponent,
+        RouterLink,
+        RouterLinkActive,
+        RouterOutlet,
+    ]
 })
 export class GeneratorComponent implements OnInit {
   public user$ = new BehaviorSubject<User | null>(null);

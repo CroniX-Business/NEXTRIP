@@ -4,12 +4,11 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AppRoutesConfig } from '../../config/routes.config';
 
 @Component({
-  selector: 'app-top-app-bar',
-  standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
-  templateUrl: './topAppBar.component.html',
-  styleUrl: './topAppBar.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-top-app-bar',
+    imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
+    templateUrl: './topAppBar.component.html',
+    styleUrl: './topAppBar.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopAppBarComponent {
   @Input() route: string | undefined = 'home';

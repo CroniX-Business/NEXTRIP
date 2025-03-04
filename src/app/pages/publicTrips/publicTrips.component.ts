@@ -9,12 +9,11 @@ import { AuthService } from '../../services/auth.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-public-trips',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './publicTrips.component.html',
-  styleUrls: ['./publicTrips.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-public-trips',
+    imports: [CommonModule],
+    templateUrl: './publicTrips.component.html',
+    styleUrls: ['./publicTrips.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PublicTripsComponent{
   public user$ = new BehaviorSubject<User | null>(null);

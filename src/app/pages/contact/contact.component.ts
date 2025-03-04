@@ -16,19 +16,18 @@ import { ContactFormService } from '../../services/contactForm.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-contact',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-    TopAppBarComponent,
-    ReactiveFormsModule,
-  ],
-  templateUrl: './contact.component.html',
-  styleUrl: './contact.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-contact',
+    imports: [
+        CommonModule,
+        RouterLink,
+        RouterLinkActive,
+        RouterOutlet,
+        TopAppBarComponent,
+        ReactiveFormsModule,
+    ],
+    templateUrl: './contact.component.html',
+    styleUrl: './contact.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContactComponent {
   public successSentMessage$ = new BehaviorSubject<string>('');

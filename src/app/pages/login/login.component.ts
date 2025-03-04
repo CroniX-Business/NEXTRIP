@@ -14,18 +14,17 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-  ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-login',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RouterLink,
+        RouterLinkActive,
+        RouterOutlet,
+    ],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
   public appRoutesConfig = AppRoutesConfig;

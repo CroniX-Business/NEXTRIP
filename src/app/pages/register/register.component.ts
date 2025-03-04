@@ -18,18 +18,17 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-register',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-  ],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-register',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RouterLink,
+        RouterLinkActive,
+        RouterOutlet,
+    ],
+    templateUrl: './register.component.html',
+    styleUrl: './register.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterComponent {
   public appRoutesConfig = AppRoutesConfig;

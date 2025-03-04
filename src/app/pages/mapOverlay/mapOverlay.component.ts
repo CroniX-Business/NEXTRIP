@@ -5,18 +5,17 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MapComponent } from '../map/map.component';
 
 @Component({
-  selector: 'app-map-overlay',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    RouterLinkActive,
-    RouterOutlet,
-    MapComponent,
-  ],
-  templateUrl: './mapOverlay.component.html',
-  styleUrl: './mapOverlay.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-map-overlay',
+    imports: [
+        CommonModule,
+        RouterLink,
+        RouterLinkActive,
+        RouterOutlet,
+        MapComponent,
+    ],
+    templateUrl: './mapOverlay.component.html',
+    styleUrl: './mapOverlay.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapOverlayComponent {
   public appRoutesConfig = AppRoutesConfig;

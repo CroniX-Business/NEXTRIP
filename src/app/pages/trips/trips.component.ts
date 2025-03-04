@@ -15,12 +15,11 @@ import {
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-  selector: 'app-trips',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './trips.component.html',
-  styleUrls: ['./trips.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-trips',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './trips.component.html',
+    styleUrls: ['./trips.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TripsComponent {
   public user$ = new BehaviorSubject<User | null>(null);
