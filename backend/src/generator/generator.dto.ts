@@ -46,6 +46,7 @@ export interface Place {
       uri: string;
     }[];
   }[];
+  isSeen: boolean;
 }
 
 export interface Trip {

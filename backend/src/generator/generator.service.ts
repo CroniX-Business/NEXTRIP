@@ -387,6 +387,7 @@ export class GeneratorService {
         ...place,
         displayName: place.displayName,
         primaryType: place.primaryType,
+        isSeen: false,
       }));
   }
 

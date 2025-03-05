@@ -6,7 +6,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Map, Marker, Popup } from 'maplibre-gl';
 import {
   LoadingIndicatorControl,
@@ -23,7 +23,7 @@ import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-map',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule ],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
 })
@@ -80,6 +80,7 @@ export class MapComponent implements AfterViewInit {
 
   user: User | null = null;
   places: Place[] | null = null;
+  oldPlaces: Place[] | null = null;
   markers: Marker[] = [];
 
   editMode: boolean = false;
@@ -88,6 +89,7 @@ export class MapComponent implements AfterViewInit {
   showModalParams: boolean = false;
   showModalSaveTrip: boolean = false;
   isTokenModalOpen: boolean = false;
+  showOnlySeen: boolean = false;
 
   radiusValue: string = '1500';
 
@@ -284,6 +286,13 @@ export class MapComponent implements AfterViewInit {
       } else {
         reject('No support for geolocation');
       }
+    });
+  }
+
+  onPlaceClick(place: Place): void {
+    this.map.flyTo({
+      center: [place.location!.longitude, place.location!.latitude],
+      zoom: 17,
     });
   }
 
@@ -574,4 +583,22 @@ export class MapComponent implements AfterViewInit {
     this.editMode = !this.editMode;
     this.directions.interactive = !this.directions.interactive;
   }
+
+  toggleSeen(place: Place) {
+    place.isSeen = !place.isSeen;
+  }
+  
+  filterSeenPlaces() {
+    if (this.showOnlySeen) {
+      this.oldPlaces = this.places;
+      this.markers.forEach(element => {
+        element.remove();
+      });
+      const filteredPlaces = this.places?.filter((place) => place.isSeen);
+      this.handleTripGenerationSuccess(filteredPlaces!);
+    } else {
+      this.handleTripGenerationSuccess(this.oldPlaces!);
+    }
+  }
+
 }
